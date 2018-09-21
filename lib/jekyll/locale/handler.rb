@@ -21,6 +21,10 @@ module Jekyll
       end
     end
 
+    def inspect
+      "#<#{self.class} @site=#{site}>"
+    end
+
     private
 
     attr_reader :site, :config
