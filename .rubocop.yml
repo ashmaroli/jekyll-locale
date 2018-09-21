@@ -1,0 +1,8 @@
+require: rubocop-jekyll
+inherit_gem:
+  rubocop-jekyll: .rubocop.yml
+
+Metrics/CyclomaticComplexity:
+  Max: 7
+Style/ClassAndModuleChildren:
+  Enabled: false

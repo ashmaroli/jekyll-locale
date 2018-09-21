@@ -1,0 +1,10 @@
+_site
+.logs
+.sass-cache
+.jekyll-cache
+.fixtures
+.gems
+.vendor
+.jekyll-metadata
+Gemfile.lock
+*.gem
