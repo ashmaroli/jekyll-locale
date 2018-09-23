@@ -47,7 +47,7 @@ module Jekyll
 
     private
 
-    # Replace each character sequence with a hyphen.
+    # Replace each character sequence with given character.
     #
     # See Utils#slugify for a description of the character sequence specified
     # by each mode.
