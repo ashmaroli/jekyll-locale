@@ -2,22 +2,42 @@
 
 module Jekyll
   class Locale::Handler
+    attr_writer :current_locale
+
     def initialize(site)
       @site   = site
       @config = site.config
     end
 
     def reset
-      @data = nil
+      @locale_data = nil
+      @portfolio   = nil
     end
 
     def data
-      @data ||= begin
-        fallback = site.site_data.dig(locales_dir, locale)
-        return {} unless fallback.is_a?(Hash)
+      locale_data[current_locale] || locale_data[default_locale]
+    end
 
-        # transform hash to one with "latinized lowercased string keys"
-        Jekyll::Utils.snake_case_keys(fallback)
+    def portfolio
+      @portfolio ||= (site.docs_to_write + html_pages)
+    end
+
+    def available_locales
+      @available_locales ||= begin
+        locales = Array(config["available_locales"]) - [default_locale]
+        locales.compact!
+        locales
+      end
+    end
+
+    def current_locale
+      @current_locale ||= default_locale
+    end
+
+    def default_locale
+      @default_locale ||= begin
+        value = config["locale"]
+        value.to_s.empty? ? "en" : value
       end
     end
 
@@ -29,6 +49,13 @@ module Jekyll
 
     attr_reader :site, :config
 
+    def html_pages
+      @html_pages ||= begin
+        pages = site.site_payload["site"]["html_pages"] || []
+        pages.reject { |page| page.name == "404.html" }
+      end
+    end
+
     def locales_dir
       @locales_dir ||= begin
         value = config["locales_dir"]
@@ -36,10 +63,13 @@ module Jekyll
       end
     end
 
-    def locale
-      @locale ||= begin
-        value = config["locale"]
-        value.to_s.empty? ? "en" : value
+    def locale_data
+      @locale_data ||= begin
+        ldata = site.site_data[locales_dir]
+        return {} unless ldata.is_a?(Hash)
+
+        # transform hash to one with "latinized lowercased string keys"
+        Jekyll::Utils.snake_case_keys(ldata)
       end
     end
   end
