@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jekyll
-  class Locale::PageGenerator < Generator
+  class Locale::Generator < Generator
     safe true
     priority :lowest
 
@@ -12,13 +12,7 @@ module Jekyll
 
       handler.available_locales.each do |locale|
         handler.portfolio.each do |canon_doc|
-          locale_page = Locale::Page.new(canon_doc, locale)
-          locale_page.content = canon_doc.content
-          locale_page.data    = canon_doc.data
-
-          # add locale_page to parent document and base array of pages
-          canon_doc.locale_pages << locale_page
-          site.pages << locale_page
+          handler.append_document(Locale::AutoPage, canon_doc, locale, site.pages)
         end
       end
     end

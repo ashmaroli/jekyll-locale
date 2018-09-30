@@ -22,6 +22,29 @@ module Jekyll
       @portfolio ||= (site.docs_to_write + html_pages)
     end
 
+    def read
+      available_locales.each do |locale|
+        portfolio.each do |canon_doc|
+          loc_page_path = site.in_source_dir(content_dirname, locale, canon_doc.relative_path)
+          next unless File.exist?(loc_page_path)
+          next unless Jekyll::Utils.has_yaml_header?(loc_page_path)
+
+          case canon_doc
+          when Jekyll::Page
+            append_document(Locale::Page, canon_doc, locale, site.pages)
+          when Jekyll::Document
+            append_document(Locale::Document, canon_doc, locale, site.docs_to_write)
+          end
+        end
+      end
+    end
+
+    def append_document(klass, canon_doc, locale, base_array)
+      locale_page = klass.new(canon_doc, locale)
+      canon_doc.locale_pages << locale_page
+      base_array << locale_page
+    end
+
     def available_locales
       @available_locales ||= begin
         locales = Array(config["available_locales"]) - [default_locale]
@@ -38,6 +61,20 @@ module Jekyll
       @default_locale ||= begin
         value = config["locale"]
         value.to_s.empty? ? "en" : value
+      end
+    end
+
+    def mode
+      @mode ||= begin
+        value = config["handler_mode"]
+        value == "auto" ? value : "manual"
+      end
+    end
+
+    def content_dirname
+      @content_dirname ||= begin
+        value = config["locale_content_dir"]
+        value.to_s.empty? ? "_locales" : value
       end
     end
 
