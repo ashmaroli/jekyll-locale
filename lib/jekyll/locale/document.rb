@@ -2,7 +2,7 @@
 
 module Jekyll
   class Locale::Document < Document
-    include Localizer
+    include Locale::Helper
 
     def initialize(canon, locale)
       setup(canon, locale)

@@ -3,7 +3,7 @@
 module Jekyll
   class Locale::AutoPage < Page
     extend Forwardable
-    include Localizer
+    include Locale::Helper
 
     attr_accessor  :data, :content, :output
     def_delegators :@canon, :site, :extname, :relative_path
