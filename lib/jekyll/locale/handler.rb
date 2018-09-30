@@ -4,9 +4,22 @@ module Jekyll
   class Locale::Handler
     attr_writer :current_locale
 
+    DEFAULT_CONFIG = {
+      "mode"        => "manual",
+      "locale"      => "en-US",
+      "data_dir"    => "locales",
+      "content_dir" => "_locales",
+      "locales_set" => [],
+    }.freeze
+
     def initialize(site)
       @site   = site
-      @config = site.config
+      config  = site.config["localization"]
+      @config = if config.is_a?(Hash)
+                  Jekyll::Utils.deep_merge_hashes(DEFAULT_CONFIG, config)
+                else
+                  DEFAULT_CONFIG
+                end
     end
 
     def reset
@@ -15,7 +28,7 @@ module Jekyll
     end
 
     def data
-      locale_data[current_locale] || locale_data[default_locale]
+      locale_data[current_locale] || locale_data[default_locale] || {}
     end
 
     def portfolio
@@ -47,7 +60,7 @@ module Jekyll
 
     def available_locales
       @available_locales ||= begin
-        locales = Array(config["available_locales"]) - [default_locale]
+        locales = Array(config["locales_set"]) - [default_locale]
         locales.compact!
         locales
       end
@@ -58,23 +71,17 @@ module Jekyll
     end
 
     def default_locale
-      @default_locale ||= begin
-        value = config["locale"]
-        value.to_s.empty? ? "en" : value
-      end
+      @default_locale ||= fetch("locale")
+    end
+
+    def content_dirname
+      @content_dirname ||= fetch("content_dir")
     end
 
     def mode
       @mode ||= begin
-        value = config["handler_mode"]
-        value == "auto" ? value : "manual"
-      end
-    end
-
-    def content_dirname
-      @content_dirname ||= begin
-        value = config["locale_content_dir"]
-        value.to_s.empty? ? "_locales" : value
+        value = config["mode"]
+        value == "auto" ? value : DEFAULT_CONFIG["mode"]
       end
     end
 
@@ -94,10 +101,7 @@ module Jekyll
     end
 
     def locales_dir
-      @locales_dir ||= begin
-        value = config["locales_dir"]
-        value.to_s.empty? ? "locales" : value
-      end
+      @locales_dir ||= fetch("data_dir")
     end
 
     def locale_data
@@ -108,6 +112,15 @@ module Jekyll
         # transform hash to one with "latinized lowercased string keys"
         Jekyll::Utils.snake_case_keys(ldata)
       end
+    end
+
+    def fetch(key)
+      value   = config[key]
+      default = DEFAULT_CONFIG[key]
+      return default unless value.class == default.class
+      return default if value.to_s.empty?
+
+      value
     end
   end
 end
