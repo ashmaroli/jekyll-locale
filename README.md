@@ -5,27 +5,93 @@ A localization plugin for Jekyll.
 
 ## Features
 
-* Exposes a `{{ locale }}` object for your Liquid templates. The *payload* for this object is derived from data files and
-  has been *preconfigured* with the following:
+* Exposes a `{{ locale }}` object for your Liquid templates that can be used to "translate" strings in your site easily.
+* Depending on configured `mode`, the plugin either generates a *copy* of every page that renders into a HTML file, and
+  every document set to be written, and renders them into dedicated urls prepended by a supported locale, or, the plugin
+  "processes" only those files placed inside the plugin's configured **`content_dir`** .
 
-    ```yaml
-    locale      : en       # Sets the 'default locale' for the site
-    locales_dir : locales  # Sets the base location for translation data, within your configured `data_dir`.
-                           # Therefore, this setting implies that the plugin looks for translation data in
-                           # either `_data/locales/` or a data file named `locales`. e.g. `_data/locales.yml`.
-    ```
-  Ergo, `{{ locale }}` is simply a *syntactic sugar* for the construct `{{ site.data[site.locales_dir][site.locale] }}`.
-* Generates a *copy* of every page that renders into a HTML file, and every document set to be written, and renders
-  them into dedicated urls prepended by a supported locale.
-  For example, if one were to configure the plugin with `available_locales: ["de", "fr", "en", "es"]`, then a file
-  named `about.md` with custom permalink set to `/about/` will result in the following files:
-    * `_site/about/index.html`
-    * `_site/de/about/index.html`
-    * `_site/es/about/index.html`
-    * `_site/fr/about/index.html`
+
+## Configuration
+
+The plugin has been *preconfigured* with the following:
+
+```yaml
+localization:
+  mode       : manual     # Sets the 'handler mode'
+  locale     : en-US      # Sets the 'default locale' for the site
+  data_dir   : locales    # Sets the base location for *translation data*, within your *site's `data_dir`*.
+  content_dir: _locales   # Sets the base location for placing files to be re-rendered. Ignored in "auto mode".
+  locales_set: []         # A list of locales the site will re-render files into
+  exclude_set: []         # A list of file paths the site will not re-render in "auto" mode.
+```
+
+### `data_dir`
+
+This setting defines the base location for *the translation data*, within your site's configured `data_dir`. The value
+defaults to `"locales"`. This implies that the plugin looks for "translation data" in either `_data/locales/` or a data
+file named `locales`. e.g. `_data/locales.yml` or `_data/locales.json`, etc.
+
+Irrespective of the format, the data should be a Hash table / dictionary of key-value pairs where the main key should
+correspond to locale defined in the `locales_set` array or the default locale `en-US`, and the subkeys set to string
+values.
+
+### `content_dir`
+
+Ignored in "auto mode", this setting defines the base location for placing "the physical copies" of the canonical pages
+and documents. Refer `mode` sub-section below for further details.
+
+The default setting is `_locales`
+
+### `locales_set`
+
+Empty by default, this setting defines what locales to be used when "localizing" a site. Listing a locale (other than
+the default locale) will cause the entire site to render for that locale and the default locale while in "auto mode".
+
+### `locale`
+
+Set to `en-US` by default, this setting defines the default locale of the site and will not be prepended to the URL of
+the generated files.
+
+### `exclude_set`
+
+Empty by default, this setting defines what files to be *excluded* from being duplicated and re-rendered in the "auto"
+mode. Ignored in "manual" mode.
+
+### `mode`
+
+This setting defines the plugin's operation strategy.
+
+When set to **`auto`**, the plugin will initialize a generator that will simply duplicate *every page and document set
+to be written to destination*, and re-render them into destination, for every locale listed in the `locales_set:`
+array.
+
+This mode will increase your build times in proportion to the total number pages, writable-documents and locales listed
+but will result in simply the same canonical output and the canonical url prepended with an iterated locale.
+
+For example, if one were to configure the plugin with `locales_set: ["de", "fr", "en-US", "es"]`, then a file named
+`about.md` will result in the following files:
+  * `_site/about.html`
+  * `_site/de/about.html`
+  * `_site/es/about.html`
+  * `_site/fr/about.html`
+
+Setting `mode` to any other value will automatically default to `"manual"` which **requires** you to create physical
+files in a special directory (as configured under `localization["content_dir"]`) to render localized copies. The
+salient features of this mode are:
+  * The physical files are handled like any other file in the site, but, they **should partially mirror** their
+    counterpart &mdash; **their relative_paths should match**. Additionally, if an original file contains front matter,
+    the physical copy should contain front matter as well.
+  * The physical files should reside inside sub-folders that match the desired locale. For example, to "localize" a post
+    at path `movies/_posts/2018-09-24-hello.markdown` with locale `fr`, you should create the physical copy at path
+    `_locales/fr/movies/_posts/2018-09-24-hello.markdown`.
+  * Physical copies can render different content and into a different layout, if desired.
+  * Physical copies of posts and other writable *documents* can be rendered to a different `slug` by defining the `slug`
+    key in the front matter.
 
 
 ## Usage
+
+### Auto Mode
 
 1. Add plugin to the `:jekyll_plugins` group in your Gemfile:
 
@@ -37,22 +103,27 @@ A localization plugin for Jekyll.
 
 2. Decide what the default locale for your site is going to be, what other locales need to be rendered, and where you'd
   place the translation data files. Then edit your config file to override the default plugin configuration, as required.
-  (See above section for default settings). For example, to render the site with data for just the custom `fr` locale:
+  (See above section for default settings). For example, to render the entire site with data for just the custom `fr`
+  locale:
 
     ```yaml
     # _config.yml
 
     author: John Doe
-    locale: "fr"
+    localization:
+      mode: auto
+      locale: fr
     ```
 
-    But if you'd like the site to be rendered using both the default `en` and custom `fr` locales, then
+    But if you'd like the entire site to be rendered using both the default `en-US` and custom `fr` locales, then
 
     ```yaml
     # _config.yml
 
     author: John Doe
-    available_locales: ["fr"] # or ["fr", "en"] if you want
+    localization:
+      mode: auto
+      locales_set: ["fr"] # or ["fr", "en-US"] if you want
     ```
 
 3. Prepare your locale data file(s) with appropriate key-value pairs. For example,
@@ -90,6 +161,44 @@ A localization plugin for Jekyll.
     <html lang="{{ page.locale }}">
     ```
 
+### Manual Mode
+
+Similar to the *auto mode*, but requires the user to provide physical files in the configured `content_dir` with
+sub-directories that match the defined locales.
+
+For example, the following directory structure
+
+```
+.
+├── _config.yml
+├── _locales
+|  ├── es
+|  |  ├── tips/
+|  |  |  └── optimized-site.md
+|  |  ├── _posts/
+|  |  ├──└── 2018-09-30-hello-world.md
+|  ├── fr
+|  |  ├── _posts/
+|  └──└──└── 2018-09-30-hello-world.md
+├── _posts
+|  └── 2018-09-30-hello-world.md
+├── english
+|  └── its-a-new-day.md
+├── tips
+|  ├── optimized-site.md
+└──└── url-filters-in-templates.md
+```
+will result in the generation of just the following files:
+
+```
+_site/2018-09-30-hello-world.html
+_site/english/its-a-new-day.html
+_site/es/2018-09-30-hello-world.html
+_site/es/tips/optimized-site.html
+_site/fr/2018-09-30-hello-world.html
+_site/tips/optimized-site.html
+_site/tips/url-filters-in-templates.html
+```
 
 ## Advanced Usage
 
@@ -105,11 +214,11 @@ pages are related to each other:
 {% endfor %}
 ```
 
-For example, `about.md` page with `permalink: /about/` in a site setup to render for locales `["en", "es", "fr"]`
+For example, `about.md` page with `permalink: /about/` in a site setup to render for locales `["en-US", "es", "fr"]`
 and hosted at `http://example.com` will render with the following:
 
 ```html
-  <link rel="canonical" hreflang="en" href="http://example.com/about/" />
+  <link rel="canonical" hreflang="en-US" href="http://example.com/about/" />
   <link rel="alternate" hreflang="es" href="http://example.com/es/about/" />
   <link rel="alternate" hreflang="fr" href="http://example.com/fr/about/" />
 ```
