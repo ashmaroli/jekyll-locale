@@ -11,7 +11,7 @@ module Jekyll
       return if handler.available_locales.empty?
 
       handler.available_locales.each do |locale|
-        handler.portfolio.each do |canon_doc|
+        handler.filtered_portfolio.each do |canon_doc|
           handler.append_document(Locale::AutoPage, canon_doc, locale, site.pages)
         end
       end

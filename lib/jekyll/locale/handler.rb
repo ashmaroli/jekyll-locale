@@ -10,6 +10,7 @@ module Jekyll
       "data_dir"    => "locales",
       "content_dir" => "_locales",
       "locales_set" => [],
+      "exclude_set" => [],
     }.freeze
 
     def initialize(site)
@@ -33,6 +34,14 @@ module Jekyll
 
     def portfolio
       @portfolio ||= (site.docs_to_write + html_pages)
+    end
+
+    def filtered_portfolio
+      @filtered_portfolio ||= begin
+        portfolio.reject do |item|
+          item.relative_path =~ exclusion_regex
+        end
+      end
     end
 
     def read
@@ -121,6 +130,10 @@ module Jekyll
       return default if value.to_s.empty?
 
       value
+    end
+
+    def exclusion_regex
+      @exclusion_regex ||= Regexp.new("\\A(?:#{Regexp.union(Array(config["exclude_set"]))})")
     end
   end
 end
