@@ -2,7 +2,7 @@
 
 module Jekyll
   module Locale::Support
-    attr_reader :locale
+    attr_reader :site, :locale
 
     def setup_hreflangs?
       false

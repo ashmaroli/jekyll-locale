@@ -39,6 +39,9 @@ module Jekyll
     def filtered_portfolio
       @filtered_portfolio ||= begin
         portfolio.reject do |item|
+          # consider only instances of class that include `Jekyll::Locale::Support` mixin
+          next true unless item.is_a?(Jekyll::Locale::Support)
+
           item.relative_path =~ exclusion_regex
         end
       end
@@ -47,6 +50,9 @@ module Jekyll
     def read
       available_locales.each do |locale|
         portfolio.each do |canon_doc|
+          # consider only instances of class that include `Jekyll::Locale::Support` mixin
+          next unless canon_doc.is_a?(Jekyll::Locale::Support)
+
           loc_page_path = site.in_source_dir(content_dirname, locale, canon_doc.relative_path)
           next unless File.exist?(loc_page_path)
           next unless Jekyll::Utils.has_yaml_header?(loc_page_path)
