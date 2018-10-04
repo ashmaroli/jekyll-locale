@@ -21,6 +21,7 @@ module Jekyll
                 else
                   DEFAULT_CONFIG
                 end
+      @sanitized_locale = {}
     end
 
     def reset
@@ -29,7 +30,8 @@ module Jekyll
     end
 
     def data
-      locale_data[current_locale] || locale_data[default_locale] || {}
+      locale_data[sanitized_locale(current_locale)] ||
+        locale_data[sanitized_locale(default_locale)] || {}
     end
 
     def portfolio
@@ -87,6 +89,10 @@ module Jekyll
 
     def default_locale
       @default_locale ||= fetch("locale")
+    end
+
+    def sanitized_locale(locale_key)
+      @sanitized_locale[locale_key] ||= locale_key.downcase.tr("-", "_")
     end
 
     def content_dirname
