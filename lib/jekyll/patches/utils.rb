@@ -15,11 +15,15 @@ module Jekyll
     def snake_case_keys(hash)
       transform_keys(hash) do |key|
         begin
-          Utils.slugify(key.to_s, :mode => "latin", :replacement => "_")
+          snakeify(key)
         rescue StandardError
           key.to_s
         end
       end
+    end
+
+    def snakeify(input)
+      slugify(input.to_s, :mode => "latin", :replacement => "_")
     end
 
     def slugify(string, mode: nil, cased: false, replacement: "-")

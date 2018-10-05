@@ -127,11 +127,23 @@ module Jekyll
 
     def locale_data
       @locale_data ||= begin
-        ldata = site.site_data[locales_dir]
-        return {} unless ldata.is_a?(Hash)
+        ldata  = site.site_data[locales_dir]
+        result = {}
+        return result unless ldata.is_a?(Hash)
 
-        # transform hash to one with "latinized lowercased string keys"
-        Jekyll::Utils.snake_case_keys(ldata)
+        ldata.each do |loc, loc_data|
+          locale = Utils.snakeify(loc)
+          result[locale] = {}
+          next unless loc_data.is_a?(Hash)
+
+          loc_data.each do |key, value|
+            next if key == "locale_date"
+
+            result[locale][Utils.snakeify(key)] = value.to_s
+          end
+        end
+
+        result
       end
     end
 
