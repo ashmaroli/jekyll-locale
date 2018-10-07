@@ -26,6 +26,15 @@ module Jekyll
       slugify(input.to_s, :mode => "latin", :replacement => "_")
     end
 
+    def recursive_symbolize_hash_keys(hash)
+      result = {}
+      hash.each do |key, value|
+        new_key = key.to_s.to_sym
+        result[new_key] = value.is_a?(Hash) ? recursive_symbolize_hash_keys(value) : value
+      end
+      result
+    end
+
     def slugify(string, mode: nil, cased: false, replacement: "-")
       mode ||= "default"
       return nil if string.nil?

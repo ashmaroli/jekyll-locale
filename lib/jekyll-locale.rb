@@ -13,6 +13,9 @@ end
 require_relative "jekyll/patches/site"
 require_relative "jekyll/patches/utils"
 
+require_relative "jekyll/locale/date_time_handler"
+require_relative "jekyll/locale/filters"
+
 require_relative "jekyll/locale/mixins/support"
 require_relative "jekyll/locale/mixins/helper"
 
@@ -25,11 +28,13 @@ end
 Jekyll::Hooks.register :site, :after_reset do |site|
   handler = site.locale_handler
   handler.reset
+  I18n.config.enforce_available_locales = false
   require_relative "jekyll/locale/generator" if handler.mode == "auto"
 end
 
 Jekyll::Hooks.register :site, :post_read do |site|
   handler = site.locale_handler
+  handler.setup
   handler.read unless handler.mode == "auto"
 end
 

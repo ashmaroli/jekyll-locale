@@ -8,9 +8,9 @@ module Jekyll
     def generate(site)
       @site   = site
       handler = site.locale_handler
-      return if handler.available_locales.empty?
+      return if handler.user_locales.empty?
 
-      handler.available_locales.each do |locale|
+      handler.user_locales.each do |locale|
         handler.filtered_portfolio.each do |canon_doc|
           handler.append_document(Locale::AutoPage, canon_doc, locale, site.pages)
         end

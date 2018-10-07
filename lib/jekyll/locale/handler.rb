@@ -2,6 +2,7 @@
 
 module Jekyll
   class Locale::Handler
+    attr_reader :locale_dates
     attr_writer :current_locale
 
     DEFAULT_CONFIG = {
@@ -25,8 +26,9 @@ module Jekyll
     end
 
     def reset
-      @locale_data = nil
-      @portfolio   = nil
+      @portfolio    = nil
+      @locale_data  = {}
+      @locale_dates = {}
     end
 
     def data
@@ -50,7 +52,7 @@ module Jekyll
     end
 
     def read
-      available_locales.each do |locale|
+      user_locales.each do |locale|
         portfolio.each do |canon_doc|
           # consider only instances of class that include `Jekyll::Locale::Support` mixin
           next unless canon_doc.is_a?(Jekyll::Locale::Support)
@@ -75,12 +77,16 @@ module Jekyll
       base_array << locale_page
     end
 
-    def available_locales
-      @available_locales ||= begin
+    def user_locales
+      @user_locales ||= begin
         locales = Array(config["locales_set"]) - [default_locale]
         locales.compact!
         locales
       end
+    end
+
+    def available_locales
+      @available_locales ||= user_locales + [default_locale]
     end
 
     def current_locale
@@ -106,13 +112,20 @@ module Jekyll
       end
     end
 
+    def setup
+      @date_handler = Locale::DateTimeHandler
+      @date_handler.bootstrap(self)
+      @locale_data = setup_data if @locale_data.empty?
+      nil
+    end
+
     def inspect
       "#<#{self.class} @site=#{site}>"
     end
 
     private
 
-    attr_reader :site, :config
+    attr_reader :site, :config, :locale_data
 
     def html_pages
       @html_pages ||= begin
@@ -125,26 +138,28 @@ module Jekyll
       @locales_dir ||= fetch("data_dir")
     end
 
-    def locale_data
-      @locale_data ||= begin
-        ldata  = site.site_data[locales_dir]
-        result = {}
-        return result unless ldata.is_a?(Hash)
+    def setup_data
+      ldata  = site.site_data[locales_dir]
+      result = {}
+      return result unless ldata.is_a?(Hash)
 
-        ldata.each do |loc, loc_data|
-          locale = Utils.snakeify(loc)
-          result[locale] = {}
-          next unless loc_data.is_a?(Hash)
+      ldata.each do |loc, loc_data|
+        locale = Utils.snakeify(loc)
+        result[locale] = {}
+        next unless loc_data.is_a?(Hash)
 
-          loc_data.each do |key, value|
-            next if key == "locale_date"
-
-            result[locale][Utils.snakeify(key)] = value.to_s
+        date_data = @date_handler::DATETIME_DEFAULTS
+        loc_data.each do |key, value|
+          if key == "locale_date"
+            date_data = Utils.recursive_symbolize_hash_keys(value) if value.is_a?(Hash)
+          elsif value.is_a?(String)
+            result[locale][Utils.snakeify(key)] = value
           end
         end
-
-        result
+        @locale_dates[loc] = date_data
       end
+
+      result
     end
 
     def fetch(key)
