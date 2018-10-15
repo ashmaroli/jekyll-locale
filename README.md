@@ -241,6 +241,8 @@ Instead filter out the canonical url from the for-loop, and render the canonical
 
 ### `localize_date`
 
+> **Adapted from [`localize` filter](https://github.com/borisschapira/borisschapira.com/blob/e3db4209536ea624466aa516e7feba79410b6719/_plugins/i18n_date_filter.rb#L9-L24) by Boris Schapira**
+
 This plugin provides a `localize_date` filter to aid in localizing valid date strings. It takes an optional parameter to specify the format
 of the output string.
 
