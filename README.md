@@ -260,6 +260,7 @@ time:
   formats:                              # A set of predefined strftime formats
     default: "%B %d, %Y %l:%M:%S %p %z" # Used by default if no other `format` has been specified.
     # my_format:                        # A valid strftime format of your choice.
+                                        #   Usage: {{ your_date | localize_date: ":my_format" }}
 ```
 
 #### Requirements
