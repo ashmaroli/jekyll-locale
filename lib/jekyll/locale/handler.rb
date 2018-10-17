@@ -128,10 +128,8 @@ module Jekyll
     attr_reader :site, :config, :locale_data
 
     def html_pages
-      @html_pages ||= begin
-        pages = site.site_payload["site"]["html_pages"] || []
-        pages.reject { |page| page.name == "404.html" }
-      end
+      pages = site.site_payload["site"]["html_pages"] || []
+      pages.reject { |page| page.name == "404.html" }
     end
 
     def locales_dir
