@@ -12,7 +12,7 @@ module Jekyll
 
       handler.user_locales.each do |locale|
         handler.filtered_portfolio.each do |canon_doc|
-          handler.append_document(Locale::AutoPage, canon_doc, locale, site.pages)
+          handler.append_document(Locale::AutoPage, canon_doc, locale)
         end
       end
     end
