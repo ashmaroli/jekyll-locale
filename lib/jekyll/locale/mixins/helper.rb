@@ -31,16 +31,18 @@ module Jekyll
     private
 
     def setup(canon, locale)
-      @locale = locale
-      @canon = canon
-      @site = canon.site
+      @locale  = locale
+      @canon   = canon
+      @site    = canon.site
       @extname = canon.extname
-      @relative_path = canon.relative_path
-      @path = site.in_source_dir(site.locale_handler.content_dirname, locale, relative_path)
+      @locale_page_dir = File.join(@site.locale_handler.content_dirname, locale, "")
+      @relative_path   = File.join(@locale_page_dir, canon.relative_path)
+      @path = @site.in_source_dir(@relative_path)
     end
 
     def configure_data
       Jekyll::Utils.deep_merge_hashes(canon.data, @data)
+      @data["categories"] = canon.data["categories"]
     end
   end
 end
