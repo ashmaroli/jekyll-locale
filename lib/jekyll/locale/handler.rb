@@ -26,9 +26,10 @@ module Jekyll
     end
 
     def reset
-      @portfolio    = nil
       @locale_data  = {}
       @locale_dates = {}
+      @portfolio = nil
+      @filtered_portfolio = nil
     end
 
     def data

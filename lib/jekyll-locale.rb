@@ -42,5 +42,6 @@ Jekyll::Hooks.register [:pages, :documents], :pre_render do |document, payload|
   handler = document.site.locale_handler
   handler.current_locale = document.locale
   document.setup_hreflangs if document.setup_hreflangs?
+  payload["page"]["locale"]    = document.locale || handler.default_locale
   payload["page"]["hreflangs"] = document.hreflangs
 end

@@ -11,6 +11,6 @@ module Jekyll
   #
 
   class Locale::PageDrop < Locale::Drop
-    def_delegators :@obj, :locale, :url
+    def_delegators :@obj, :url
   end
 end
