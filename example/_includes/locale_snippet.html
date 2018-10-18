@@ -1,0 +1,42 @@
+<hr/>
+{% assign mode = site.localization.mode %}
+{% capture data_table %}
+Locale Mode | : | {{ mode }}
+Page Locale | : | {{ page.locale }}
+{% endcapture %}
+
+{% capture notes %}
+<div>Things to note:</div>
+  {% if page.locale != site.localization.locale %}
+  * The page url **{{ page.url }}** has been *prepended* with **`/{{ page.locale }}`**
+  * The relative filepath to this page is {%- if mode == 'auto' %} the same as the canonical page{% endif %}:
+  **{{ page.path }}**
+  {% if mode == 'auto' %}* The page's rendered content is same as that of the canonical page{% endif %}
+  {% else %}
+  * The page url **{{ page.url }}** is not modified
+  * The relative filepath to this page is: **{{ page.path }}**
+  {% endif -%}
+{% endcapture %}
+
+<div id="xtra-shots">
+  <div id="locale-info">{{ data_table | markdownify }}</div>
+  <div id="notes">{{ notes | markdownify }}</div>
+
+  <hr/>
+
+  {% if page.hreflangs == empty %}
+  <div>This Page has no other versions
+  {%- if mode == 'auto' %} as this page has been explicitly listed under the `exclude_set` {% endif %}.
+  </div>
+  {% else %}
+  <div>This Page is also available under the following locales:
+    <ul id="locale-list">
+    {% for ref in page.hreflangs %}
+      <li><a href="{{ ref.url }}">{{ ref.locale }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div id="date">{{ 'now' | localize_date }}</div>
+</div>

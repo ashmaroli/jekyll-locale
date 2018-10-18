@@ -1,0 +1,17 @@
+title: Localization Example
+collections:
+  puppies:
+    output: true
+localization:
+  mode: manual
+  locale: en
+  locales_set: ["en", "fr"]
+  exclude_set:
+    - _posts/2018-10-18-english-only.md
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
+  - .jekyll-cache
