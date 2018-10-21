@@ -41,8 +41,10 @@ module Jekyll
     end
 
     def configure_data
+      Array(@data["categories"]).delete_if do |category|
+        category == @site.locale_handler.content_dirname || category == @locale
+      end
       Jekyll::Utils.deep_merge_hashes(canon.data, @data)
-      @data["categories"] = canon.data["categories"]
     end
   end
 end

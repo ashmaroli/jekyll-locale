@@ -1,0 +1,16 @@
+- name: Home
+  url : /
+- name: About
+  url : /about.html
+- name: Hello World
+  url : /2018/10/15/hello-world.html
+- name: Nested Post
+  url : /2018/10/15/nested-post.html
+- name: English Only
+  url : /2018/10/18/english-only.html
+- name: Rover
+  url : /puppies/rover.html
+- name: Atom Feed
+  url : /feed.xml
+- name: Sitemap
+  url : /sitemap.xml

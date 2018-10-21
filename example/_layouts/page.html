@@ -4,17 +4,10 @@ layout: base
 
 <nav id="navbar">
   <ul>
-    <li>
-      <a href="/">Home</a>
-    </li>
-    <li>
-      <a href="/about.html">About</a>
-    </li>
-    {% for post in site.posts %}
-      <li><a href="{{ post.url }}">{{ post.title }}</a></li>
-    {% endfor %}
-    {% for puppy in site.puppies %}
-      <li><a href="{{ puppy.url }}">{{ puppy.title }}</a></li>
+    {% for nav in site.data.navigation %}
+      <li>
+        <a href="{{ nav.url }}" {% if nav.url contains 'xml' %}target="blank"{% endif %}>{{ nav.name }}</a>
+      </li>
     {% endfor %}
   </ul>
 </nav>

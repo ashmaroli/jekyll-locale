@@ -64,7 +64,7 @@ module Jekyll
 
           case canon_doc
           when Jekyll::Page
-            append_document(Locale::Page, canon_doc, locale)
+            append_page(Locale::Page, canon_doc, locale)
           when Jekyll::Document
             append_document(Locale::Document, canon_doc, locale)
           end
@@ -72,10 +72,19 @@ module Jekyll
       end
     end
 
+    def append_page(klass, canon_page, locale)
+      locale_page = klass.new(canon_page, locale)
+      canon_page.locale_pages << locale_page
+      site.pages              << locale_page
+      site.pages.uniq!
+    end
+
     def append_document(klass, canon_doc, locale)
-      locale_page = klass.new(canon_doc, locale)
-      canon_doc.locale_pages << locale_page
-      site.pages << locale_page
+      locale_doc = klass.new(canon_doc, locale)
+      canon_doc.locale_pages    << locale_doc
+      canon_doc.collection.docs << locale_doc
+      site.docs_to_write        << locale_doc
+      site.docs_to_write.uniq!
     end
 
     def user_locales

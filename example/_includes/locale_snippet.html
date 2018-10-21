@@ -11,7 +11,10 @@ Page Locale | : | {{ page.locale }}
   * The page url **{{ page.url }}** has been *prepended* with **`/{{ page.locale }}`**
   * The relative filepath to this page is {%- if mode == 'auto' %} the same as the canonical page{% endif %}:
   **{{ page.path }}**
-  {% if mode == 'auto' %}* The page's rendered content is same as that of the canonical page{% endif %}
+  {% if mode == 'auto' -%}
+  * The page's rendered content is same as that of the canonical page
+  {% if page.path contains '_posts/' %}* This page **will not be included** in your site's feed.{% endif %}
+  {% endif %}
   {% else %}
   * The page url **{{ page.url }}** is not modified
   * The relative filepath to this page is: **{{ page.path }}**
