@@ -24,18 +24,16 @@ require_relative "jekyll/locale/mixins/helper"
   klass.include Jekyll::Locale::Support
 end
 
-# Load Locale::Generator if requested
 Jekyll::Hooks.register :site, :after_reset do |site|
   handler = site.locale_handler
   handler.reset
   I18n.config.enforce_available_locales = false
-  require_relative "jekyll/locale/generator" if handler.mode == "auto"
 end
 
 Jekyll::Hooks.register :site, :post_read do |site|
   handler = site.locale_handler
   handler.setup
-  handler.read unless handler.mode == "auto"
+  handler.read
 end
 
 Jekyll::Hooks.register [:pages, :documents], :pre_render do |document, payload|

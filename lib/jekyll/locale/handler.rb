@@ -29,7 +29,6 @@ module Jekyll
       @locale_data  = {}
       @locale_dates = {}
       @portfolio = nil
-      @filtered_portfolio = nil
     end
 
     def data
@@ -37,39 +36,8 @@ module Jekyll
         locale_data[sanitized_locale(default_locale)] || {}
     end
 
-    def portfolio
-      @portfolio ||= (site.docs_to_write + html_pages)
-    end
-
-    def filtered_portfolio
-      @filtered_portfolio ||= begin
-        portfolio.reject do |item|
-          # consider only instances of class that include `Jekyll::Locale::Support` mixin
-          next true unless item.is_a?(Jekyll::Locale::Support)
-
-          item.relative_path =~ exclusion_regex
-        end
-      end
-    end
-
     def read
-      user_locales.each do |locale|
-        portfolio.each do |canon_doc|
-          # consider only instances of class that include `Jekyll::Locale::Support` mixin
-          next unless canon_doc.is_a?(Jekyll::Locale::Support)
-
-          loc_page_path = site.in_source_dir(content_dirname, locale, canon_doc.relative_path)
-          next unless File.exist?(loc_page_path)
-          next unless Jekyll::Utils.has_yaml_header?(loc_page_path)
-
-          case canon_doc
-          when Jekyll::Page
-            append_page(Locale::Page, canon_doc, locale)
-          when Jekyll::Document
-            append_document(Locale::Document, canon_doc, locale)
-          end
-        end
-      end
+      mode == "auto" ? auto_localization : manual_localization
     end
 
     def append_page(klass, canon_page, locale)
@@ -168,6 +136,40 @@ module Jekyll
       end
 
       result
+    end
+
+    # Instances of Jekyll class that include `Jekyll::Locale::Support` mixin
+    # (which are simply Jekyll::Page and Jekyll::Document)
+    def portfolio
+      @portfolio ||= (site.docs_to_write + html_pages).select do |doc|
+        doc.is_a?(Jekyll::Locale::Support)
+      end
+    end
+
+    def auto_localization
+      user_locales.each do |locale|
+        portfolio.each do |canon_doc|
+          next if canon_doc.relative_path =~ exclusion_regex
+          append_page(Locale::AutoPage, canon_doc, locale)
+        end
+      end
+    end
+
+    def manual_localization
+      user_locales.each do |locale|
+        portfolio.each do |canon_doc|
+          loc_page_path = site.in_source_dir(content_dirname, locale, canon_doc.relative_path)
+          next unless File.exist?(loc_page_path)
+          next unless Jekyll::Utils.has_yaml_header?(loc_page_path)
+
+          case canon_doc
+          when Jekyll::Page
+            append_page(Locale::Page, canon_doc, locale)
+          when Jekyll::Document
+            append_document(Locale::Document, canon_doc, locale)
+          end
+        end
+      end
     end
 
     def fetch(key)
