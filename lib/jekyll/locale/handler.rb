@@ -31,6 +31,13 @@ module Jekyll
       @portfolio = nil
     end
 
+    def setup
+      @date_handler = Locale::DateTimeHandler
+      @date_handler.bootstrap(self)
+      @locale_data = setup_data if @locale_data.empty?
+      nil
+    end
+
     def data
       locale_data[sanitized_locale(current_locale)] ||
         locale_data[sanitized_locale(default_locale)] || {}
@@ -38,21 +45,6 @@ module Jekyll
 
     def read
       mode == "auto" ? auto_localization : manual_localization
-    end
-
-    def append_page(klass, canon_page, locale)
-      locale_page = klass.new(canon_page, locale)
-      canon_page.locale_pages << locale_page
-      site.pages              << locale_page
-      site.pages.uniq!
-    end
-
-    def append_document(klass, canon_doc, locale)
-      locale_doc = klass.new(canon_doc, locale)
-      canon_doc.locale_pages    << locale_doc
-      canon_doc.collection.docs << locale_doc
-      site.docs_to_write        << locale_doc
-      site.docs_to_write.uniq!
     end
 
     def user_locales
@@ -75,26 +67,8 @@ module Jekyll
       @default_locale ||= fetch("locale")
     end
 
-    def sanitized_locale(locale_key)
-      @sanitized_locale[locale_key] ||= locale_key.downcase.tr("-", "_")
-    end
-
     def content_dirname
       @content_dirname ||= fetch("content_dir")
-    end
-
-    def mode
-      @mode ||= begin
-        value = config["mode"]
-        value == "auto" ? value : DEFAULT_CONFIG["mode"]
-      end
-    end
-
-    def setup
-      @date_handler = Locale::DateTimeHandler
-      @date_handler.bootstrap(self)
-      @locale_data = setup_data if @locale_data.empty?
-      nil
     end
 
     def inspect
@@ -169,6 +143,32 @@ module Jekyll
             append_document(Locale::Document, canon_doc, locale)
           end
         end
+      end
+    end
+
+    def append_page(klass, canon_page, locale)
+      locale_page = klass.new(canon_page, locale)
+      canon_page.locale_pages << locale_page
+      site.pages              << locale_page
+      site.pages.uniq!
+    end
+
+    def append_document(klass, canon_doc, locale)
+      locale_doc = klass.new(canon_doc, locale)
+      canon_doc.locale_pages    << locale_doc
+      canon_doc.collection.docs << locale_doc
+      site.docs_to_write        << locale_doc
+      site.docs_to_write.uniq!
+    end
+
+    def sanitized_locale(locale_key)
+      @sanitized_locale[locale_key] ||= locale_key.downcase.tr("-", "_")
+    end
+
+    def mode
+      @mode ||= begin
+        value = config["mode"]
+        value == "auto" ? value : DEFAULT_CONFIG["mode"]
       end
     end
 
