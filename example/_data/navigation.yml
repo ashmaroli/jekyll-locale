@@ -6,6 +6,10 @@
   url : /2018/10/15/hello-world.html
 - name: Nested Post
   url : /2018/10/15/nested-post.html
+- name: Categorized Post - I
+  url : /category/2018/10/24/superdir-category.html
+- name: Categorized Post - II
+  url : /category/2018/10/24/front-matter-category.html
 - name: English Only
   url : /2018/10/18/english-only.html
 - name: Rover
