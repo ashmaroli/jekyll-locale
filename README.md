@@ -270,3 +270,25 @@ The plugin also places a few conventions to streamline usage:
 * The array of names are filled in by default using values defined in Ruby's `Date` class.
 * The array of full day names and full month names have `nil` as the first entry. So locales for non-English languages should have `nil` as the first entry. (In YAML, null list item can be written as simply `~`)
 * The optional parameter for the filter, `format` should either be a string that corresponds to the symbol of the `formats` subkey (e.g. `":default"`) or a valid `strftime` format.
+
+
+### `locale_url`
+
+This filter aids in generating a URL string based on the current locale and delegates internally to Jekyll's `relative_url` to take the site's `baseurl` under consideration.
+
+If a non-string object is passed as the argument, the filter ignores it and proceeds to generate an output for an empty string.
+If an absolute URL is provided, then it is returned as is.
+
+#### Usage
+
+```ruby
+{{ '//foobar//' | locale_url }}
+  # => "/foobar/"         # when current locale equals default locale
+  # => "/fr/foobar/"      # when current locale equals "fr"
+  # => "/fr/blog/foobar"  # when current locale equals "fr" and baseurl equals "blog"
+
+{{ 'http://foobar//' | locale_url }}
+  # => "http://foobar//"  # when current locale equals default locale
+  # => "http://foobar//"  # when current locale equals "fr"
+  # => "http://foobar//"  # when current locale equals "fr" and baseurl equals "blog"
+```
