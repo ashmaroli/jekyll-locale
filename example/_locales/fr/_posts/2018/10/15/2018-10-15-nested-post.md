@@ -2,5 +2,5 @@
 layout: page
 ---
 
-{{ locale.welcome }}!  
-Cette document est destinée à présenter le fonctionnement du plugin `jekyll-locale`.
+{{ locale.welcome }} !  
+Ce document est destiné à présenter le fonctionnement du plugin `jekyll-locale`.
