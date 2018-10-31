@@ -18,7 +18,7 @@ module Jekyll
     end
 
     def to_liquid
-      @to_liquid ||= Locale::PageDrop.new(self)
+      @to_liquid ||= configure_payload(super)
     end
 
     def template

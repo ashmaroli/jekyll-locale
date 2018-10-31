@@ -46,5 +46,12 @@ module Jekyll
       end
       Jekyll::Utils.deep_merge_hashes(canon.data, @data)
     end
+
+    def configure_payload(payload)
+      payload.to_h.tap do |data|
+        data["path"] = self.relative_path
+        data["url"]  = self.url
+      end
+    end
   end
 end
