@@ -1,0 +1,11 @@
+version: "2"
+
+plugins:
+  rubocop:
+    enabled: false
+
+exclude_patterns:
+  - "*.*"
+  - ".*"
+  - Gemfile
+  - example/

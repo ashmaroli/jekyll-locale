@@ -1,5 +1,9 @@
 # Jekyll Locale
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/3a28682ac6c6693c4e77/maintainability)][maintainability]
+
+[maintainability]: https://codeclimate.com/github/ashmaroli/jekyll-locale/maintainability
+
 A localization plugin for Jekyll.
 
 
