@@ -23,7 +23,7 @@ module Jekyll
     end
 
     def snakeify(input)
-      slugify(input.to_s, :mode => "latin", :replacement => "_")
+      slugify(input.to_s, :mode => "latin", :cased => true, :replacement => "_")
     end
 
     def recursive_symbolize_hash_keys(hash)

@@ -137,11 +137,11 @@ salient features of this mode are:
 
     en:
       home-page: Home
-      about me : About Me
+      About Me : About Me
       portfolio: Portfolio
     fr:
       home-page: Accueil
-      about me : À propos
+      About Me : À propos
       portfolio: Portefeuille
     ```
     *(Note the use of heterogeneous format of keys..)*
@@ -151,12 +151,13 @@ salient features of this mode are:
     ```
     List of link names in my navbar:
     * {{ locale.home_page }}
-    * {{ locale.about_me }}
+    * {{ locale.About_Me }}
     * {{ locale.portfolio }}
     ```
     *(Note that the ids passed to the `locale` object contain an underscore instead.)*
-    The locale data keys are stored internally as `snake_case` strings. So `about me` or `about-me` will always be stored
-    as `about_me` internally and the corresponding value can only be retrieved by using the snake_cased key.
+    The locale data keys are stored internally as case-sensitive `snake_case` strings. So while `about me` or `about-me`
+    will always be stored as `about_me`, `About Me` or `About-me` will be stored as `About_Me` and `About_me` respectively.
+    The corresponding value can only be retrieved by using the snake_cased key.
 
     Additionally, every page can determine its own locale via the `{{ page.locale }} construct. For example,
 

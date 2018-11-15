@@ -162,7 +162,7 @@ module Jekyll
     end
 
     def sanitized_locale(locale_key)
-      @sanitized_locale[locale_key] ||= locale_key.downcase.tr("-", "_")
+      @sanitized_locale[locale_key] ||= Utils.snakeify(locale_key)
     end
 
     def mode
