@@ -8,21 +8,6 @@ module Jekyll
         DateTimeHandler.localize(time(input), format)
       end
 
-      def locale_url(input)
-        input = "" unless input.is_a?(String)
-        return input if Addressable::URI.parse(input).absolute?
-
-        input   = relative_url(input)
-        handler = @context.registers[:site].locale_handler
-
-        locale_id = handler.current_locale
-        locale_id = "" if handler.current_locale == handler.default_locale
-
-        File.join("/", locale_id, input).tap do |result|
-          result.squeeze!("/")
-        end
-      end
-
       private
 
       def symbol_or_strftime(format)
