@@ -2,7 +2,7 @@
 
 module Jekyll
   class Locale::Handler
-    attr_reader :locale_dates
+    attr_reader :default_locale, :available_locales, :locale_dates, :content_dirname
     attr_writer :current_locale
 
     DEFAULT_CONFIG = {
@@ -22,7 +22,12 @@ module Jekyll
                 else
                   DEFAULT_CONFIG
                 end
-      @sanitized_locale = {}
+
+      @default_locale    = fetch("locale")
+      @available_locales = user_locales + [@default_locale]
+      @content_dirname   = mode == "auto" ? "" : fetch("content_dir")
+
+      @snakeified_keys = {}
     end
 
     def reset
@@ -32,15 +37,13 @@ module Jekyll
     end
 
     def setup
-      @date_handler = Locale::DateTimeHandler
-      @date_handler.bootstrap(self)
-      @locale_data = setup_data if @locale_data.empty?
-      nil
+      Locale::DateTimeHandler.bootstrap(self)
+      setup_data if @locale_data.empty?
     end
 
     def data
-      locale_data[sanitized_locale(current_locale)] ||
-        locale_data[sanitized_locale(default_locale)] || {}
+      locale_data[snakeified_keys(current_locale)] ||
+        locale_data[snakeified_keys(default_locale)] || {}
     end
 
     def read
@@ -55,20 +58,8 @@ module Jekyll
       end
     end
 
-    def available_locales
-      @available_locales ||= user_locales + [default_locale]
-    end
-
     def current_locale
       @current_locale ||= default_locale
-    end
-
-    def default_locale
-      @default_locale ||= fetch("locale")
-    end
-
-    def content_dirname
-      @content_dirname ||= fetch("content_dir")
     end
 
     def inspect
@@ -84,32 +75,40 @@ module Jekyll
       pages.reject { |page| page.name == "404.html" }
     end
 
-    def locales_dir
-      @locales_dir ||= fetch("data_dir")
-    end
-
     def setup_data
-      ldata  = site.site_data[locales_dir]
-      result = {}
-      return result unless ldata.is_a?(Hash)
+      locales_dir = fetch("data_dir")
+      base_data   = site.site_data[locales_dir]
+      return @locale_data unless base_data.is_a?(Hash)
 
-      ldata.each do |loc, loc_data|
-        locale = Utils.snakeify(loc)
-        result[locale] = {}
-        next unless loc_data.is_a?(Hash)
-
-        date_data = @date_handler::DATETIME_DEFAULTS
-        loc_data.each do |key, value|
-          if key == "locale_date"
-            date_data = Utils.recursive_symbolize_hash_keys(value) if value.is_a?(Hash)
-          elsif value.is_a?(String)
-            result[locale][Utils.snakeify(key)] = value
-          end
-        end
-        @locale_dates[loc] = date_data
+      base_data.each do |locale_id, data|
+        next unless data.is_a?(Hash)
+        process_locale_data(locale_id, data)
       end
 
-      result
+      nil
+    end
+
+    def process_locale_data(loc, data_hash)
+      locale = snakeified_keys(loc)
+      @locale_data[locale] = {}
+
+      date_data = Locale::DateTimeHandler::DATETIME_DEFAULTS
+      data_hash.each do |key, value|
+        if key == "locale_date"
+          date_data = configure_locale_date(date_data, value)
+        else
+          @locale_data[locale][snakeified_keys(key)] = value
+        end
+      end
+      @locale_dates[loc] = date_data
+    end
+
+    def configure_locale_date(date_defaults, data)
+      return date_defaults unless data.is_a?(Hash)
+
+      Jekyll::Utils.deep_merge_hashes(
+        date_defaults, Utils.recursive_symbolize_hash_keys(data)
+      )
     end
 
     # Instances of Jekyll class that include `Jekyll::Locale::Support` mixin
@@ -161,8 +160,8 @@ module Jekyll
       site.docs_to_write.uniq!
     end
 
-    def sanitized_locale(locale_key)
-      @sanitized_locale[locale_key] ||= Utils.snakeify(locale_key)
+    def snakeified_keys(key)
+      @snakeified_keys[key] ||= Utils.snakeify(key)
     end
 
     def mode
