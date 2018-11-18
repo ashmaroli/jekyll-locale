@@ -5,3 +5,4 @@ gemspec
 
 gem "rspec"
 gem "rubocop-jekyll"
+gem "simplecov", :require => false

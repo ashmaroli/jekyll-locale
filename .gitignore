@@ -8,4 +8,5 @@ _site
 .jekyll-metadata
 Gemfile.lock
 *.gem
+coverage
 tmp

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "simplecov"
 require "fileutils"
 require "jekyll"
 require_relative "../lib/jekyll-locale"
