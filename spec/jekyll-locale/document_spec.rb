@@ -34,6 +34,10 @@ RSpec.describe Jekyll::Locale::Document do
     expect(subject.locale).to eql("en")
   end
 
+  it "equals the 'cleaned_relative_path' attribute with its canonical document" do
+    expect(subject.cleaned_relative_path).to eql(canon.cleaned_relative_path)
+  end
+
   it "matches the 'relative_path' attribute with its canonical document" do
     expect(subject.relative_path).to eql(File.join("_locales", "en", canon.relative_path))
   end
