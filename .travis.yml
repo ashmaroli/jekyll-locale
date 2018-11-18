@@ -1,0 +1,17 @@
+sudo: false
+language: ruby
+cache: bundler
+rvm:
+  - 2.5
+  - 2.4
+  - 2.3
+
+before_script:
+  - ruby --version
+  - gem --version
+  - bundle --version
+
+script: bundle exec rspec
+
+notifications:
+  email: false

@@ -1,0 +1,30 @@
+version: "{build}"
+clone_depth: 5
+build: off
+
+environment:
+  matrix:
+    - RUBY_FOLDER_VER: "25"
+    - RUBY_FOLDER_VER: "24"
+    - RUBY_FOLDER_VER: "23"
+
+install:
+  - SET PATH=C:\Ruby%RUBY_FOLDER_VER%\bin;%PATH%
+  - bundle install --retry 5 --jobs=%NUMBER_OF_PROCESSORS% --clean --path vendor\bundle
+
+before_test:
+  - ruby --version
+  - gem --version
+  - bundle --version
+
+test_script:
+  - bundle exec rspec
+
+cache:
+  - 'vendor\bundle -> appveyor.yml,Gemfile,jekyll-locale.gemspec'
+
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: false
