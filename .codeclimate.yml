@@ -10,3 +10,4 @@ exclude_patterns:
   - Gemfile
   - example/
   - spec/
+  - lib/jekyll/locale/version.rb
