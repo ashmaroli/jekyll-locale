@@ -2,6 +2,10 @@ version: "{build}"
 clone_depth: 5
 build: off
 
+branches:
+  only:
+    - master
+
 environment:
   matrix:
     - RUBY_FOLDER_VER: "25"
