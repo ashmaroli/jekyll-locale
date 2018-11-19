@@ -48,3 +48,4 @@ locale_date:
   time:
     formats:
       default: "%d %B %Y %H h %M min %S s"
+      short: "%d %B %Y"
