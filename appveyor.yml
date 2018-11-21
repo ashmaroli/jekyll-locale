@@ -9,8 +9,22 @@ branches:
 environment:
   matrix:
     - RUBY_FOLDER_VER: "25"
+      TEST_SUITE     : "rspec"
+
+    - RUBY_FOLDER_VER: "25"
+      TEST_SUITE     : "cucumber"
+
     - RUBY_FOLDER_VER: "24"
+      TEST_SUITE     : "rspec"
+
+    - RUBY_FOLDER_VER: "24"
+      TEST_SUITE     : "cucumber"
+
     - RUBY_FOLDER_VER: "23"
+      TEST_SUITE     : "rspec"
+
+    - RUBY_FOLDER_VER: "23"
+      TEST_SUITE     : "cucumber"
 
 install:
   - SET PATH=C:\Ruby%RUBY_FOLDER_VER%\bin;%PATH%
@@ -22,7 +36,7 @@ before_test:
   - bundle --version
 
 test_script:
-  - bundle exec rspec
+  - bash ./script/cibuild
 
 cache:
   - 'vendor\bundle -> appveyor.yml,Gemfile,jekyll-locale.gemspec'

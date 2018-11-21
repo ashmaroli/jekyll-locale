@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 gemspec
 
+gem "cucumber", "~> 3.1"
 gem "rspec"
 gem "rubocop-jekyll"
 gem "simplecov", :require => false

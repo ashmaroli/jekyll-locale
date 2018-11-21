@@ -9,5 +9,6 @@ exclude_patterns:
   - ".*"
   - Gemfile
   - example/
+  - features/
   - spec/
   - lib/jekyll/locale/version.rb
