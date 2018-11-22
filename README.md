@@ -160,12 +160,12 @@ salient features of this mode are:
     * {{ locale.About_Me }}
     * {{ locale.portfolio }}
     ```
-    *(Note that the ids passed to the `locale` object contain an underscore instead.)*
+    *(Note that the ids passed to the `locale` object contain an underscore instead.)*  
     The locale data keys are stored internally as case-sensitive `snake_case` strings. So while `about me` or `about-me`
     will always be stored as `about_me`, `About Me` or `About-me` will be stored as `About_Me` and `About_me` respectively.
     The corresponding value can only be retrieved by using the snake_cased key.
 
-    Additionally, every page can determine its own locale via the `{{ page.locale }} construct. For example,
+    Additionally, every page can determine its own locale via the `{{ page.locale }}` construct. For example,
 
     ```html
     <!DOCTYPE html>
@@ -210,6 +210,14 @@ _site/fr/2018-09-30-hello-world.html
 _site/tips/optimized-site.html
 _site/tips/url-filters-in-templates.html
 ```
+
+#### Known Limitations
+
+* The plugin requires that a canonical page and a locale page have the same "relative path" (from the site's `source` and
+  from the `content_dir` respectively). This means that **`about.md` will expect to link to `_locales/fr/about.md` instead
+  of `_locales/fr/apropos.md`**. To force the locale page to render into a different url, you'll need to either explicitly
+  set a `permalink` key or a `slug` key in the locale page's front matter.
+* Canonical files are mandatory. This means that **`_locales/fr/about.md` will only be read-in if `about.md` exists.**
 
 ## Advanced Usage
 
