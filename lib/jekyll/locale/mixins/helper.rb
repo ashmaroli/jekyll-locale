@@ -44,7 +44,11 @@ module Jekyll
       Array(@data["categories"]).delete_if do |category|
         category == @site.locale_handler.content_dirname || category == @locale
       end
-      Jekyll::Utils.deep_merge_hashes(canon.data, @data)
+
+      @data = Jekyll::Utils.deep_merge_hashes(canon.data, @data)
+      @data.default_proc = proc do |_, key|
+        site.frontmatter_defaults.find(relative_path, type, key)
+      end
     end
 
     def configure_payload(payload)

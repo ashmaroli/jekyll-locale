@@ -3,3 +3,25 @@ collections:
   puppies:
     output: true
 plugins: ["jekyll-locale"]
+
+defaults:
+- scope:
+    path: about.md
+  values:
+    layout: none
+    meta: about_site
+- scope:
+    path: _posts
+  values:
+    layout: none
+    meta: post_content
+- scope:
+    type: posts
+  values:
+    layout: none
+    meta: locale_post
+- scope:
+    path: _locales/en/about.md
+  values:
+    layout: none
+    meta: about_locale

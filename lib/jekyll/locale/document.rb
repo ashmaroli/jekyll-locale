@@ -2,6 +2,7 @@
 
 module Jekyll
   class Locale::Document < Document
+    attr_reader :type
     include Locale::Helper
 
     def initialize(canon, locale)
@@ -9,6 +10,7 @@ module Jekyll
       @collection = canon.collection
       @extname = File.extname(relative_path)
       @has_yaml_header = nil
+      @type = @collection.label.to_sym
       read
 
       special_dir = draft? ? "_drafts" : @collection.relative_directory

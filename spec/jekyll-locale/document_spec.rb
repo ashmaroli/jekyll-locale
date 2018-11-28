@@ -61,6 +61,8 @@ RSpec.describe Jekyll::Locale::Document do
       "ext"           => ".md",
       "foo"           => "bar",
       "id"            => "/en/2018/10/15/hello-world",
+      "layout"        => "none",
+      "meta"          => "locale_post",
       "next"          => nil,
       "output"        => nil,
       "path"          => "_locales/en/_posts/2018-10-15-hello-world.md",

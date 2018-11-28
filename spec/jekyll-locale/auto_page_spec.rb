@@ -47,6 +47,8 @@ RSpec.describe Jekyll::Locale::AutoPage do
     expect(subject.to_liquid).to eql(
       "content" => "{{ locale.welcome }}!\nCanonical Content.\n",
       "dir"     => "/",
+      "layout"  => "none",
+      "meta"    => "about_site",
       "name"    => "about.md",
       "path"    => "about.md",
       "url"     => "/en/about.html"

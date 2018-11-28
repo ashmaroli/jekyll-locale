@@ -48,6 +48,8 @@ RSpec.describe Jekyll::Locale::Page do
       "content" => "Hello World\n{{ page.url }}\n\n{{ 'now' | localize_date }}\n",
       "dir"     => "/en/",
       "foo"     => "bar",
+      "layout"  => "none",
+      "meta"    => "about_locale",
       "name"    => "about.md",
       "path"    => "_locales/en/about.md",
       "url"     => "/en/about.html"
