@@ -234,27 +234,16 @@ pages are related to each other:
 ```
 
 For example, `about.md` page with `permalink: /about/` in a site setup to render for locales `["en-US", "es", "fr"]`
-and hosted at `http://example.com` will render with the following:
+with `en-US` as the default locale and hosted at `http://example.com` will render with the following:
 
 ```html
-  <link rel="canonical" hreflang="en-US" href="http://example.com/about/" />
+  <link rel="alternate" hreflang="en-US" href="http://example.com/about/" />
   <link rel="alternate" hreflang="es" href="http://example.com/es/about/" />
   <link rel="alternate" hreflang="fr" href="http://example.com/fr/about/" />
 ```
 
-*The above use of `rel="canonical"` with `hreflang` attribute is generally frowned upon and not recommended by Google.* </br>
-Instead filter out the canonical url from the for-loop, and render the canonical link as an `alternate` with the
-`x-default` tag, along with a self-referencing declaration:
+Likewise, each of the localized versions too will also **render with the same hreflang set as above**.
 
-```html
-  <link rel="alternate" hreflang="{{ page.locale }}" href="{{ page.url | absolute_url }}" />
-{% for item in page.hreflangs %}
-{% unless item.relation == 'canonical' %}
-  <link rel="{{ item.relation }}" hreflang="{{ item.locale }}" href="{{ item.url | absolute_url }}" />
-{% endunless %}
-{% endfor %}
-  <link rel="alternate" hreflang="x-default" href="{{ page.url | absolute_url }}" />
-```
 
 ## Liquid Filters
 

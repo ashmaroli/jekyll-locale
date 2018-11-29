@@ -95,7 +95,6 @@ RSpec.describe Jekyll::Locale::Handler do
 
       expect(Pathname.new(dest_dir("index.html"))).to exist
       expect(Pathname.new(dest_dir("en/index.html"))).to exist
-      expect(Pathname.new(dest_dir("en/index.html"))).to exist
       expect(Pathname.new(dest_dir("en/2018/10/15/hello-world.html"))).to exist
     end
   end

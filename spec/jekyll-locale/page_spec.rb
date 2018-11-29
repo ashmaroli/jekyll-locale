@@ -6,7 +6,10 @@ RSpec.describe Jekyll::Locale::Page do
   let(:config) do
     {
       "title"        => "Localization Test",
-      "localization" => { "locale" => locale },
+      "localization" => {
+        "locale"      => locale,
+        "locales_set" => %w(en fr ja)
+      },
     }
   end
   let(:site)  { make_site(config) }
@@ -15,7 +18,9 @@ RSpec.describe Jekyll::Locale::Page do
   subject { described_class.new(canon, locale) }
 
   before do
-    make_page_file("_locales/en/#{page_name}", :content => "Hello World")
+    make_page_file("_locales/#{locale}/#{page_name}", :content => "Hello World")
+    make_page_file("_locales/fr/#{page_name}", :content => "Hello World")
+    make_page_file("_locales/ja/#{page_name}", :content => "Hello World")
   end
 
   after do
@@ -57,16 +62,45 @@ RSpec.describe Jekyll::Locale::Page do
   end
 
   it "returns hreflang data for Liquid templates" do
-    expect(canon.locale_pages).to eql([])
-    canon.locale_pages << subject
-
-    subject.setup_hreflangs if subject.setup_hreflangs?
-    expect(subject.hreflangs).to eql(
+    site.process
+    canon = site.pages.find { |p| p.is_a?(Jekyll::Page) && p.url == "/about.html" }
+    expect(canon.hreflangs).to eql(
       [
         {
           "locale"   => "en",
-          "relation" => "canonical",
+          "relation" => "alternate",
           "url"      => "/about.html",
+        },
+        {
+          "locale"   => "fr",
+          "relation" => "alternate",
+          "url"      => "/fr/about.html",
+        },
+        {
+          "locale"   => "ja",
+          "relation" => "alternate",
+          "url"      => "/ja/about.html",
+        },
+      ]
+    )
+
+    locale_page = site.pages.find { |p| p.is_a?(described_class) && p.url == "/fr/about.html" }
+    expect(locale_page.hreflangs).to eql(
+      [
+        {
+          "locale"   => "en",
+          "relation" => "alternate",
+          "url"      => "/about.html",
+        },
+        {
+          "locale"   => "fr",
+          "relation" => "alternate",
+          "url"      => "/fr/about.html",
+        },
+        {
+          "locale"   => "ja",
+          "relation" => "alternate",
+          "url"      => "/ja/about.html",
         },
       ]
     )

@@ -9,10 +9,10 @@ module Jekyll
     end
 
     def setup_hreflangs
-      @hreflangs = (canon.locale_pages + [canon] - [self]).map do |locale_page|
+      @hreflangs = ([canon] + canon.locale_pages).map do |locale_page|
         {
           "locale"   => locale_page.locale || site.locale_handler.default_locale,
-          "relation" => locale_page.locale ? "alternate" : "canonical",
+          "relation" => "alternate",
           "url"      => locale_page.url,
         }
       end

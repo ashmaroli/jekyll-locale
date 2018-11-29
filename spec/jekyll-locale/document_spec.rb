@@ -7,7 +7,10 @@ RSpec.describe Jekyll::Locale::Document do
   let(:config) do
     {
       "title"        => "Localization Test",
-      "localization" => { "locale" => locale },
+      "localization" => {
+        "locale" => locale,
+        "locales_set" => %w(fr en ja),
+      },
     }
   end
   let(:site)  { make_site(config) }
@@ -16,7 +19,9 @@ RSpec.describe Jekyll::Locale::Document do
   subject { described_class.new(canon, locale) }
 
   before do
-    make_page_file("_locales/en/_posts/#{doc_name}", :content => "Hello World")
+    make_page_file("_locales/#{locale}/_posts/#{doc_name}", :content => "Hello World")
+    make_page_file("_locales/fr/_posts/#{doc_name}", :content => "Hello World")
+    make_page_file("_locales/ja/_posts/#{doc_name}", :content => "Hello World")
   end
 
   after do
@@ -76,16 +81,49 @@ RSpec.describe Jekyll::Locale::Document do
   end
 
   it "returns hreflang data for Liquid templates" do
-    expect(canon.locale_pages).to eql([])
-    canon.locale_pages << subject
-
-    subject.setup_hreflangs if subject.setup_hreflangs?
-    expect(subject.hreflangs).to eql(
+    site.process
+    canon = site.documents.find do |doc|
+      doc.is_a?(Jekyll::Document) && doc.url == "/2018/10/15/hello-world.html"
+    end
+    expect(canon.hreflangs).to eql(
       [
         {
           "locale"   => "en",
-          "relation" => "canonical",
+          "relation" => "alternate",
           "url"      => "/2018/10/15/hello-world.html",
+        },
+        {
+          "locale"   => "fr",
+          "relation" => "alternate",
+          "url"      => "/fr/2018/10/15/hello-world.html",
+        },
+        {
+          "locale"   => "ja",
+          "relation" => "alternate",
+          "url"      => "/ja/2018/10/15/hello-world.html",
+        },
+      ]
+    )
+
+    locale_post = site.documents.find do |doc|
+      doc.is_a?(described_class) && doc.url == "/fr/2018/10/15/hello-world.html"
+    end
+    expect(locale_post.hreflangs).to eql(
+      [
+        {
+          "locale"   => "en",
+          "relation" => "alternate",
+          "url"      => "/2018/10/15/hello-world.html",
+        },
+        {
+          "locale"   => "fr",
+          "relation" => "alternate",
+          "url"      => "/fr/2018/10/15/hello-world.html",
+        },
+        {
+          "locale"   => "ja",
+          "relation" => "alternate",
+          "url"      => "/ja/2018/10/15/hello-world.html",
         },
       ]
     )

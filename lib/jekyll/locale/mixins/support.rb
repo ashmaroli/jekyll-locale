@@ -9,9 +9,9 @@ module Jekyll
     end
 
     def hreflangs
-      @hreflangs ||= locale_pages.map do |locale_page|
+      @hreflangs ||= ([self] + locale_pages).map do |locale_page|
         {
-          "locale"   => locale_page.locale,
+          "locale"   => locale_page.locale || site.locale_handler.default_locale,
           "relation" => "alternate",
           "url"      => locale_page.url,
         }
