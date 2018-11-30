@@ -80,51 +80,33 @@ RSpec.describe Jekyll::Locale::Document do
     )
   end
 
-  it "returns hreflang data for Liquid templates" do
+  it "returns hreflang and locale_sibling data for Liquid templates" do
     site.process
+
+    hreflangs = [
+      { "locale" => "en", "url" => "/2018/10/15/hello-world.html"     },
+      { "locale" => "fr", "url" => "/fr/2018/10/15/hello-world.html"  },
+      { "locale" => "ja", "url" => "/ja/2018/10/15/hello-world.html"  },
+    ]
     canon = site.documents.find do |doc|
       doc.is_a?(Jekyll::Document) && doc.url == "/2018/10/15/hello-world.html"
     end
-    expect(canon.hreflangs).to eql(
+    expect(canon.hreflangs).to eql(hreflangs)
+    expect(canon.locale_siblings).to eql(
       [
-        {
-          "locale"   => "en",
-          "relation" => "alternate",
-          "url"      => "/2018/10/15/hello-world.html",
-        },
-        {
-          "locale"   => "fr",
-          "relation" => "alternate",
-          "url"      => "/fr/2018/10/15/hello-world.html",
-        },
-        {
-          "locale"   => "ja",
-          "relation" => "alternate",
-          "url"      => "/ja/2018/10/15/hello-world.html",
-        },
+        { "locale" => "fr", "url" => "/fr/2018/10/15/hello-world.html" },
+        { "locale" => "ja", "url" => "/ja/2018/10/15/hello-world.html" },
       ]
     )
 
     locale_post = site.documents.find do |doc|
       doc.is_a?(described_class) && doc.url == "/fr/2018/10/15/hello-world.html"
     end
-    expect(locale_post.hreflangs).to eql(
+    expect(locale_post.hreflangs).to eql(hreflangs)
+    expect(locale_post.locale_siblings).to eql(
       [
-        {
-          "locale"   => "en",
-          "relation" => "alternate",
-          "url"      => "/2018/10/15/hello-world.html",
-        },
-        {
-          "locale"   => "fr",
-          "relation" => "alternate",
-          "url"      => "/fr/2018/10/15/hello-world.html",
-        },
-        {
-          "locale"   => "ja",
-          "relation" => "alternate",
-          "url"      => "/ja/2018/10/15/hello-world.html",
-        },
+        { "locale" => "en", "url" => "/2018/10/15/hello-world.html"    },
+        { "locale" => "ja", "url" => "/ja/2018/10/15/hello-world.html" },
       ]
     )
   end

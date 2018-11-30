@@ -8,18 +8,27 @@ module Jekyll
       false
     end
 
+    def locale_siblings
+      @locale_siblings ||= sibling_data(locale_pages)
+    end
+
     def hreflangs
-      @hreflangs ||= ([self] + locale_pages).map do |locale_page|
-        {
-          "locale"   => locale_page.locale || site.locale_handler.default_locale,
-          "relation" => "alternate",
-          "url"      => locale_page.url,
-        }
-      end
+      @hreflangs ||= sibling_data([self] + locale_pages)
     end
 
     def locale_pages
       @locale_pages ||= []
+    end
+
+    private
+
+    def sibling_data(locale_page_set)
+      locale_page_set.map do |locale_page|
+        {
+          "locale" => locale_page.locale || site.locale_handler.default_locale,
+          "url"    => locale_page.url,
+        }
+      end
     end
   end
 end

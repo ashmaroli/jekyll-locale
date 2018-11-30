@@ -9,13 +9,9 @@ module Jekyll
     end
 
     def setup_hreflangs
-      @hreflangs = ([canon] + canon.locale_pages).map do |locale_page|
-        {
-          "locale"   => locale_page.locale || site.locale_handler.default_locale,
-          "relation" => "alternate",
-          "url"      => locale_page.url,
-        }
-      end
+      page_set = [canon] + canon.locale_pages
+      @hreflangs = sibling_data(page_set)
+      @locale_siblings = sibling_data(page_set - [self])
     end
 
     def permalink

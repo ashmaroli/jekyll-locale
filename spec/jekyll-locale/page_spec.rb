@@ -61,47 +61,29 @@ RSpec.describe Jekyll::Locale::Page do
     )
   end
 
-  it "returns hreflang data for Liquid templates" do
+  it "returns hreflang and locale_sibling data for Liquid templates" do
     site.process
+
+    hreflangs = [
+      { "locale" => "en", "url" => "/about.html"    },
+      { "locale" => "fr", "url" => "/fr/about.html" },
+      { "locale" => "ja", "url" => "/ja/about.html" },
+    ]
     canon = site.pages.find { |p| p.is_a?(Jekyll::Page) && p.url == "/about.html" }
-    expect(canon.hreflangs).to eql(
+    expect(canon.hreflangs).to eql(hreflangs)
+    expect(canon.locale_siblings).to eql(
       [
-        {
-          "locale"   => "en",
-          "relation" => "alternate",
-          "url"      => "/about.html",
-        },
-        {
-          "locale"   => "fr",
-          "relation" => "alternate",
-          "url"      => "/fr/about.html",
-        },
-        {
-          "locale"   => "ja",
-          "relation" => "alternate",
-          "url"      => "/ja/about.html",
-        },
+        { "locale" => "fr", "url" => "/fr/about.html" },
+        { "locale" => "ja", "url" => "/ja/about.html" },
       ]
     )
 
     locale_page = site.pages.find { |p| p.is_a?(described_class) && p.url == "/fr/about.html" }
-    expect(locale_page.hreflangs).to eql(
+    expect(locale_page.hreflangs).to eql(hreflangs)
+    expect(locale_page.locale_siblings).to eql(
       [
-        {
-          "locale"   => "en",
-          "relation" => "alternate",
-          "url"      => "/about.html",
-        },
-        {
-          "locale"   => "fr",
-          "relation" => "alternate",
-          "url"      => "/fr/about.html",
-        },
-        {
-          "locale"   => "ja",
-          "relation" => "alternate",
-          "url"      => "/ja/about.html",
-        },
+        { "locale" => "en", "url" => "/about.html"    },
+        { "locale" => "ja", "url" => "/ja/about.html" },
       ]
     )
   end
