@@ -97,5 +97,26 @@ RSpec.describe Jekyll::Locale::Handler do
       expect(Pathname.new(dest_dir("en/index.html"))).to exist
       expect(Pathname.new(dest_dir("en/2018/10/15/hello-world.html"))).to exist
     end
+
+    it "allows withelding publish until ready" do
+      expect(Pathname.new(dest_dir("about.html"))).to exist
+      expect(Pathname.new(dest_dir("en/about.html"))).to_not exist
+
+      make_page_file(
+        "_locales/en/about.md",
+        :content      => "Hello World",
+        :front_matter => { "published" => true },
+      )
+      site.process
+      expect(Pathname.new(dest_dir("en/about.html"))).to exist
+
+      make_page_file(
+        "_locales/en/about.md",
+        :content      => "Hello World",
+        :front_matter => { "published" => false },
+      )
+      site.process
+      expect(Pathname.new(dest_dir("en/about.html"))).to_not exist
+    end
   end
 end

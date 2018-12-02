@@ -20,10 +20,15 @@ module Jekyll
       @locale_pages ||= []
     end
 
+    def publish?
+      site.publisher.publish?(self)
+    end
+
     private
 
     def sibling_data(locale_page_set)
       locale_page_set.map do |locale_page|
+        next unless locale_page.publish?
         {
           "locale" => locale_page.locale || site.locale_handler.default_locale,
           "url"    => locale_page.url,

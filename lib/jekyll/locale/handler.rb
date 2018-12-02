@@ -147,6 +147,8 @@ module Jekyll
 
     def append_page(klass, canon_page, locale)
       locale_page = klass.new(canon_page, locale)
+      return unless locale_page.publish?
+
       canon_page.locale_pages << locale_page
       site.pages              << locale_page
       site.pages.uniq!
@@ -154,6 +156,8 @@ module Jekyll
 
     def append_document(klass, canon_doc, locale)
       locale_doc = klass.new(canon_doc, locale)
+      return unless locale_doc.publish?
+
       canon_doc.locale_pages    << locale_doc
       canon_doc.collection.docs << locale_doc
       site.docs_to_write        << locale_doc
