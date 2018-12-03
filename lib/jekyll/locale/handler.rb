@@ -70,11 +70,6 @@ module Jekyll
 
     attr_reader :site, :config, :locale_data
 
-    def html_pages
-      pages = site.site_payload["site"]["html_pages"] || []
-      pages.reject { |page| page.name == "404.html" }
-    end
-
     def setup_data
       locales_dir = fetch("data_dir")
       base_data   = site.site_data[locales_dir]
@@ -114,8 +109,13 @@ module Jekyll
     # Instances of Jekyll class that include `Jekyll::Locale::Support` mixin
     # (which are simply Jekyll::Page and Jekyll::Document)
     def portfolio
-      @portfolio ||= (site.docs_to_write + html_pages).select do |doc|
-        doc.is_a?(Jekyll::Locale::Support)
+      @portfolio ||= begin
+        html_pages = site.site_payload["site"]["html_pages"] || []
+        html_pages.reject! { |page| page.name == "404.html" }
+
+        (site.docs_to_write + html_pages).select do |doc|
+          doc.is_a?(Jekyll::Locale::Support)
+        end
       end
     end
 
