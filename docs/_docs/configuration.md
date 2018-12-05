@@ -25,6 +25,63 @@ localization:
   correspond to locale defined in the `locales_set` array or the default locale `en-US`, and the subkeys set to string
   values.
 
+  #### Example of a single data file corresponding to multiple locales
+
+  ```yaml
+  # --------------------------------------------------
+  # _data/locales.yml
+  # --------------------------------------------------
+
+  # English US
+  en-US:
+    greeting: Hello
+    user: user
+    navigation:
+      home: Home
+      about: About
+      contact: Contact
+
+  # French
+  fr-FR:
+    greeting: Bonjour
+    user: l' usager
+    navigation:
+      home: Accueil
+      about: À propos
+      contact: Contacter
+  ```
+  <br>
+
+  #### Example of dedicated data files corresponding to a single locale
+
+  ```yaml
+  # --------------------------------------------------
+  # _data/locales/en-US.yml
+  # --------------------------------------------------
+  #
+  # English US
+  greeting: Hello
+  user: user
+  navigation:
+    home: Home
+    about: About
+    contact: Contact
+  ```
+
+  ```yaml
+  # --------------------------------------------------
+  # _data/locales/fr-FR.yml
+  # --------------------------------------------------
+  #
+  # French
+  greeting: Bonjour
+  user: l' usager
+  navigation:
+    home: Accueil
+    about: À propos
+    contact: Contacter
+  ```
+
 * ### `content_dir`
 
   Ignored in "auto mode", this setting defines the base location for placing "the physical copies" of the canonical pages
