@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html lang="{{ page.locale.id }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll v{{ jekyll.version }}">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin data-proofer-ignore>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,400i,700,700i&amp;subset=latin-ext">
+  <link rel="preload" href="{{ 'assets/css/styles.css' | relative_url }}" as="style">
+  <link rel="stylesheet" href="{{ 'assets/css/styles.css' | relative_url }}">
+  <link rel="icon" type="image/x-icon" href="{{ 'favicon.ico' | relative_url }}">
+  {% for item in page.hreflangs -%}
+    <link rel="alternate" hreflang="{{ item.locale.id }}" href="{{ item.url | absolute_url }}" />
+  {% endfor %}
+</head>
+<body>
+  <header>
+    <div class="center-on-mobiles">
+      <a href="{{ '/' | prefix_locale | relative_url }}" class="logo">
+        <span class="sr-only">Jekyll Locale</span>
+        <img src="{{ 'assets/img/jekyll-locale.png' | relative_url }}" width="260" height="auto" alt="Jekyll Locale">
+      </a>
+    </div>
+  </header>
+
+  <main class="docs">
+    <div class="docs-nav-mobile show-on-mobiles">
+      <select onchange="if (this.value) window.location.href=this.value">
+        <option value="">Navigate the docs…</option>
+        {%- for section in locale.sidebar %}
+          <optgroup label="{{ section.title }}">
+            {%- for item in section.docs %}
+              {%- if item.link %}
+                <option value="{{ item.link | prefix_locale | relative_url }}">{{ item.title }}</option>
+              {%- endif -%}
+            {%- endfor %}
+          </optgroup>
+        {%- endfor %}
+      </select>
+
+      {%- if page.hreflangs.size > 1 %}
+        <div class="locale-switcher">
+          <select onchange="if (this.value) window.location.href=this.value">
+            <option value="">Change page locale…</option>
+              {%- for ref in page.locale_siblings %}
+                <option value="{{ ref.url | relative_url }}">{{ ref.locale }}</option>
+              {%- endfor %}
+          </select>
+        </div>
+      {%- endif %}
+    </div>
+
+    <div id="content">
+      <article>
+        {% if page.title %}<h1>{{ page.title }}</h1>{% endif %}
+        {{ content }}
+      </article>
+
+      {% unless page.locale.id == site.localizations.locale %}{% if page.translators %}
+        <div id="translator">
+          <small><em>
+            {{ locale.translated_by }} &nbsp;
+            <strong>
+              {% for translator in page.translators %}
+                {% if translator.link %}
+                  <a href="{{ translator.link }}">{{ translator.name }}</a>
+                  {% if page.translators.size > 1 and forloop.last == false %},&nbsp;{% endif %}
+                {% else %}
+                  {{ translator.name }}
+                  {% if page.translators.size > 1 and forloop.last == false %},&nbsp;{% endif %}
+                {% endif %}
+              {% endfor %}
+            </strong>
+          </em></small>
+        </div>
+      {% endif %}{% endunless %}
+    </div>
+
+    <div id="sidebar" class="hide-on-mobiles">
+      <div class="sticky">
+        <aside>
+          {% for section in locale.sidebar %}
+            <h4>{{ section.title }}</h4>
+            <ul>
+              {%- for item in section.docs %}
+                <li{% if page.url contains item.link %} class="current"{% endif %}>
+                  {%- if item.link %}
+                    <a href="{{ item.link | prefix_locale | relative_url }}">
+                      {{ item.title }}
+                    </a>
+                  {%- else %}
+                    {{ item.title }}
+                  {%- endif %}
+                </li>
+              {%- endfor %}
+            </ul>
+          {%- endfor %}
+        </aside>
+
+        <div class="locale-switcher">
+          {%- if page.locale_siblings == empty %}
+            <div>
+              <small>
+                This Page has no other versions
+                {%- if site.localization.mode == 'auto' -%}
+                  as this page has been explicitly listed under the `exclude_set`
+                {%- endif -%}.
+              </small>
+            </div>
+          {%- else -%}
+            <div>
+              <small>{{ locale.available_locales }}:</small>
+              <ul id="locale-list">
+                {%- for ref in page.locale_siblings %}
+                  <li><a href="{{ ref.url | relative_url }}">{{ ref.locale.label }}</a></li>
+                {%- endfor %}
+              </ul>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="align-center">
+      <ul id="footer-links">
+        <li><a href="{{ locale.about_page.link | prefix_locale | relative_url }}">{{ locale.about_page.title }}</a></li>
+        <li><a href="https://github.com/ashmaroli/jekyll-locale">GitHub</a></li>
+      </ul>
+    </div>
+    <div class="align-center">{{ locale.copyright_preface }}</div>
+    <div class="align-center">&copy;&nbsp;{{ site.time | date: '%Y' }} {{ locale.license_preface }}
+      <strong>
+        <a href="https://github.com/ashmaroli/jekyll-locale/blob/master/LICENSE.txt">MIT License</a>
+      </strong>.
+    </div>
+  </footer>
+
+  <!-- Anchor link script -->
+  <script>
+    var anchorForId = function (id) {
+      var anchor = document.createElement("a");
+      anchor.className = "header-link";
+      anchor.href      = "#" + id;
+      anchor.innerHTML = "<span class=\"sr-only\">Permalink</span><i class=\"fa fa-link\"></i>";
+      anchor.title = "Permalink";
+      return anchor;
+    };
+
+    var linkifyAnchors = function (level, containingElement) {
+      var headers = containingElement.getElementsByTagName("h" + level);
+      for (var h = 0; h < headers.length; h++) {
+        var header = headers[h];
+
+        if (typeof header.id !== "undefined" && header.id !== "") {
+          header.appendChild(anchorForId(header.id));
+        }
+      }
+    };
+
+    document.onreadystatechange = function () {
+      if (this.readyState === "complete") {
+        var contentBlock = document.getElementsByClassName("docs")[0];
+        if (!contentBlock) {
+          return;
+        }
+        for (var level = 1; level <= 6; level++) {
+          linkifyAnchors(level, contentBlock);
+        }
+      }
+    };
+  </script>
+  <!-- Anchor link script -->
+</body>
+</html>

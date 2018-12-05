@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 gemspec
 
+gem "jekyll-mentions"
 gem "rspec"
 gem "rubocop-jekyll"
 gem "simplecov", :require => false

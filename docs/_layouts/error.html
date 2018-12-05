@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html lang="{{ page.locale.id }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll v{{ jekyll.version }}">
+  <link rel="preload" href="{{ 'assets/fonts/lato-v14-latin-300.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="{{ 'assets/fonts/lato-v14-latin-700.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="{{ 'assets/css/styles.css' | relative_url }}" as="style">
+  <link rel="stylesheet" href="{{ 'assets/css/styles.css' | relative_url }}">
+  <link rel="icon" type="image/x-icon" href="{{ 'favicon.ico' | relative_url }}">
+</head>
+<body id="error" class="align-center">
+  <header>
+    <a href="{{ '/' | relative_url }}" class="logo">
+      <span class="sr-only">Jekyll Locale</span>
+      <img src="{{ 'assets/img/jekyll-locale.png' | relative_url }}" width="420" height="auto" alt="Jekyll Locale">
+    </a>
+  </header>
+  <main>{{ content }}</main>
+</body>
+</html>

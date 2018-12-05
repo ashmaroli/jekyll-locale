@@ -1,0 +1,32 @@
+name: Jekyll Locale
+description: A Localization plugin for Jekyll
+baseurl: ""
+collections:
+  docs:
+    output: true
+livereload: true
+
+localization:
+  mode: manual
+  content_dir: _localizations
+  locales_set:
+    fr:
+      label: Français
+    en-US:
+      label: English US
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+plugins:
+  - jekyll-locale
+  - jekyll-mentions
+exclude:
+- vendor/
+- .gitignore
+- .jekyll-cache
+- CNAME
+- icomoon-selection.json
+- readme.md

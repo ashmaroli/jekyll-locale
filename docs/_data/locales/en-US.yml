@@ -1,0 +1,29 @@
+sidebar:
+- title: Orientation
+  docs:
+    - title: Configuration
+      link: /configuration/
+    - title: Auto Mode
+      link: /modes/auto/
+    - title: Manual Mode
+      link: /modes/manual/
+- title: Usage
+  docs:
+    - title: Introduction
+      link: /usage/intro/
+    - title: Advanced Usage
+      link: /usage/advanced/
+- title: Liquid Filters
+  docs:
+    - title: localize_date
+      link: /filters/localize_date/
+    - title: prefix_locale
+      link: /filters/prefix_locale/
+
+available_locales: This Page is also available in the following locales
+copyright_preface: The contents of this website are
+license_preface: under the terms of the
+about_page:
+  title: About
+  link: /about/
+translated_by: "This page has been translated by:"
