@@ -11,17 +11,18 @@ RSpec.describe Jekyll::Locale::Filters do
   FilterMock.include(Jekyll::Filters)
   FilterMock.include(described_class)
 
-  let(:site_locale) { "fr" }
-  let(:page_locale) { "fr" }
+  let(:locale_id) { "fr" }
+  let(:metadata)  { {} }
+  let(:locale)    { Jekyll::Locale::Identity.new(locale_id, metadata) }
   let(:config) do
     {
       "title"        => "Localization Test",
       "timezone"     => "America/New_York",
-      "localization" => { "locale" => site_locale },
+      "localization" => { "locale" => "fr" },
     }
   end
   let(:site)    { make_site(config) }
-  let(:page)    { { "locale" => page_locale, "title" => "Hello World" } }
+  let(:page)    { { "locale" => locale, "title" => "Hello World" } }
   let(:context) { Liquid::Context.new({}, {}, :site => site, :page => page) }
 
   subject { FilterMock.new(context) }
@@ -69,7 +70,7 @@ RSpec.describe Jekyll::Locale::Filters do
     end
 
     context "with a non-default page locale" do
-      let(:page_locale) { "ja" }
+      let(:locale_id) { "ja" }
 
       it "returns the input if it is not a String instance" do
         expect(subject.prefix_locale(nil)).to eql(nil)

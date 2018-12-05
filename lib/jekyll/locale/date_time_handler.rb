@@ -31,7 +31,7 @@ module Jekyll
 
       def localize(input, format)
         object = date_cache(input)
-        locale = @handler.current_locale.to_sym
+        locale = @handler.current_locale.id.to_sym
         data   = @handler.locale_dates[locale.to_s] || {}
         store_translations(locale, data) unless translations.key?(locale)
         backend.localize(locale, object, format)

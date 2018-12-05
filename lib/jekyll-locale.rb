@@ -7,6 +7,7 @@ module Jekyll
     autoload :AutoPage, "jekyll/locale/auto_page"
     autoload :Page,     "jekyll/locale/page"
     autoload :Handler,  "jekyll/locale/handler"
+    autoload :Identity, "jekyll/locale/identity"
   end
 end
 

@@ -221,6 +221,41 @@ _site/tips/url-filters-in-templates.html
 
 ## Advanced Usage
 
+### Configuring Locale Metadata
+
+> **Adapted from a [suggestion](https://github.com/jekyll/jekyll/pull/7240#issuecomment-422914818) by @letrastudio**
+
+The default metadata for every locale configured via the `locales_set` array is simply an `id` referencing the locale name.
+However, you may define custom metadata for your locales by slightly altering the `locales_set` setting:
+
+```yaml
+localization:
+  locale: en-US
+  locales_set:
+    en-US:
+      label: English
+      dir: ltr
+      img: /assets/img/en-US.png
+    fr-FR:
+      label: Francais
+      dir: ltr
+      img: /assets/img/fr_FR.jpg
+```
+
+*The metadata keys and values may be whatever your want it to be. It is not validated by the plugin.
+However, you will not be able to change the `id` attribute.*
+
+Once configured properly, you will be able to reference them via `{{ page.locale }}` in your templates:
+
+```html
+<a href="#" title="{{ page.locale.label }}">
+  <img src="{{ page.locale.img | relative_url }}" />
+</a>
+```
+
+
+### Setting up hreflangs
+
 Each generated locale page is aware of its canonical page and its sibling locale page (for sites rendering three or more
 locales) and can be used to render meta tags for optimal SEO.
 
@@ -229,7 +264,7 @@ pages are related to each other:
 
 ```html
 {% for item in page.hreflangs %}
-  <link rel="{{ item.relation }}" hreflang="{{ item.locale }}" href="{{ item.url | absolute_url }}" />
+  <link rel="alternate" hreflang="{{ item.locale.id }}" href="{{ item.url | absolute_url }}" />
 {% endfor %}
 ```
 

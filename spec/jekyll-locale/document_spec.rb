@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Jekyll::Locale::Document do
-  let(:collection) { "posts" }
-  let(:doc_name)   { "2018-10-15-hello-world.md" }
-  let(:locale)     { "en" }
+  let(:collection)  { "posts" }
+  let(:doc_name)    { "2018-10-15-hello-world.md" }
+  let(:locale_id)   { "en" }
+  let(:metadata)    { {} }
+  let(:locale)      { Jekyll::Locale::Identity.new(locale_id, metadata) }
+  let(:locales_set) { %w(fr en ja) }
   let(:config) do
     {
       "title"        => "Localization Test",
       "localization" => {
-        "locale" => locale,
-        "locales_set" => %w(fr en ja),
+        "locale"      => locale_id,
+        "locales_set" => locales_set,
       },
     }
   end
@@ -35,8 +38,9 @@ RSpec.describe Jekyll::Locale::Document do
     )
   end
 
-  it "returns the 'locale' attribute" do
-    expect(subject.locale).to eql("en")
+  it "returns the 'locale identity' object" do
+    expect(subject.locale).to eql(locale)
+    expect(subject.locale.id).to eql("en")
   end
 
   it "equals the 'cleaned_relative_path' attribute with its canonical document" do
@@ -84,9 +88,9 @@ RSpec.describe Jekyll::Locale::Document do
     site.process
 
     hreflangs = [
-      { "locale" => "en", "url" => "/2018/10/15/hello-world.html"     },
-      { "locale" => "fr", "url" => "/fr/2018/10/15/hello-world.html"  },
-      { "locale" => "ja", "url" => "/ja/2018/10/15/hello-world.html"  },
+      { "locale" => { "id" => "en" }, "url" => "/2018/10/15/hello-world.html"    },
+      { "locale" => { "id" => "fr" }, "url" => "/fr/2018/10/15/hello-world.html" },
+      { "locale" => { "id" => "ja" }, "url" => "/ja/2018/10/15/hello-world.html" },
     ]
     canon = site.documents.find do |doc|
       doc.is_a?(Jekyll::Document) && doc.url == "/2018/10/15/hello-world.html"
@@ -94,8 +98,8 @@ RSpec.describe Jekyll::Locale::Document do
     expect(canon.hreflangs).to eql(hreflangs)
     expect(canon.locale_siblings).to eql(
       [
-        { "locale" => "fr", "url" => "/fr/2018/10/15/hello-world.html" },
-        { "locale" => "ja", "url" => "/ja/2018/10/15/hello-world.html" },
+        { "locale" => { "id" => "fr" }, "url" => "/fr/2018/10/15/hello-world.html" },
+        { "locale" => { "id" => "ja" }, "url" => "/ja/2018/10/15/hello-world.html" },
       ]
     )
 
@@ -105,9 +109,52 @@ RSpec.describe Jekyll::Locale::Document do
     expect(locale_post.hreflangs).to eql(hreflangs)
     expect(locale_post.locale_siblings).to eql(
       [
-        { "locale" => "en", "url" => "/2018/10/15/hello-world.html"    },
-        { "locale" => "ja", "url" => "/ja/2018/10/15/hello-world.html" },
+        { "locale" => { "id" => "en" }, "url" => "/2018/10/15/hello-world.html"    },
+        { "locale" => { "id" => "ja" }, "url" => "/ja/2018/10/15/hello-world.html" },
       ]
     )
   end
+
+  # rubocop:disable Metrics/LineLength
+  context "with locale metadata via locales_set configuration" do
+    let(:locales_set) do
+      {
+        "fr" => { "label" => "Français" },
+        "en" => { "label" => "English" },
+        "ja" => { "label" => "日本語" },
+      }
+    end
+
+    it "returns hreflang and locale_sibling data for Liquid templates" do
+      site.process
+
+      hreflangs = [
+        { "locale" => { "id" => "en", "label" => "English"  }, "url" => "/2018/10/15/hello-world.html"    },
+        { "locale" => { "id" => "fr", "label" => "Français" }, "url" => "/fr/2018/10/15/hello-world.html" },
+        { "locale" => { "id" => "ja", "label" => "日本語"    }, "url" => "/ja/2018/10/15/hello-world.html" },
+      ]
+      canon = site.documents.find do |doc|
+        doc.is_a?(Jekyll::Document) && doc.url == "/2018/10/15/hello-world.html"
+      end
+      expect(canon.hreflangs).to eql(hreflangs)
+      expect(canon.locale_siblings).to eql(
+        [
+          { "locale" => { "id" => "fr", "label" => "Français" }, "url" => "/fr/2018/10/15/hello-world.html" },
+          { "locale" => { "id" => "ja", "label" => "日本語"    }, "url" => "/ja/2018/10/15/hello-world.html" },
+        ]
+      )
+
+      locale_post = site.documents.find do |doc|
+        doc.is_a?(described_class) && doc.url == "/fr/2018/10/15/hello-world.html"
+      end
+      expect(locale_post.hreflangs).to eql(hreflangs)
+      expect(locale_post.locale_siblings).to eql(
+        [
+          { "locale" => { "id" => "en", "label" => "English" }, "url" => "/2018/10/15/hello-world.html"    },
+          { "locale" => { "id" => "ja", "label" => "日本語"   }, "url" => "/ja/2018/10/15/hello-world.html" },
+        ]
+      )
+    end
+  end
+  # rubocop:enable Metrics/LineLength
 end

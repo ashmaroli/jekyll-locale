@@ -29,8 +29,10 @@ module Jekyll
     def sibling_data(locale_page_set)
       locale_page_set.map do |locale_page|
         next unless locale_page.publish?
+
+        locale = locale_page.locale || site.locale_handler.default_locale
         {
-          "locale" => locale_page.locale || site.locale_handler.default_locale,
+          "locale" => locale.to_liquid,
           "url"    => locale_page.url,
         }
       end

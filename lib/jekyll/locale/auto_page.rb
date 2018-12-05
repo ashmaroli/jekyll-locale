@@ -18,7 +18,7 @@ module Jekyll
     end
 
     def url
-      @url ||= File.join("", locale, canon.url)
+      @url ||= File.join("", locale.id, canon.url)
     end
 
     def to_liquid

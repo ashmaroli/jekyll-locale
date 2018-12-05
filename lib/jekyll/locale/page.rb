@@ -22,7 +22,7 @@ module Jekyll
     end
 
     def template
-      @template ||= File.join("", locale, super)
+      @template ||= File.join("", locale.id, super)
     end
   end
 end

@@ -30,7 +30,7 @@ module Jekyll
     end
 
     def url_template
-      @url_template ||= File.join("", locale, super)
+      @url_template ||= File.join("", locale.id, super)
     end
   end
 end

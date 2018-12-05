@@ -16,7 +16,7 @@ module Jekyll
 
     def permalink
       canon_link = super
-      File.join(locale, canon_link) if canon_link
+      File.join(locale.id, canon_link) if canon_link
     end
 
     def inspect
@@ -31,14 +31,14 @@ module Jekyll
       @canon   = canon
       @site    = canon.site
       @extname = canon.extname
-      @locale_page_dir = File.join(@site.locale_handler.content_dirname, locale, "")
+      @locale_page_dir = File.join(@site.locale_handler.content_dirname, locale.id, "")
       @relative_path   = File.join(@locale_page_dir, canon.relative_path)
       @path = @site.in_source_dir(@relative_path)
     end
 
     def configure_data
       Array(@data["categories"]).delete_if do |category|
-        category == @site.locale_handler.content_dirname || category == @locale
+        category == @site.locale_handler.content_dirname || category == @locale.id
       end
 
       @data = Jekyll::Utils.deep_merge_hashes(canon.data, @data)

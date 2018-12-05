@@ -14,7 +14,7 @@ module Jekyll
 
         handler     = @context.registers[:site].locale_handler
         page_locale = @context.registers[:page]["locale"]
-        page_locale = "" if page_locale == handler.default_locale
+        page_locale = "" if page_locale.id == handler.default_locale.id
         File.join("/", page_locale.to_s, input).squeeze("/")
       end
 

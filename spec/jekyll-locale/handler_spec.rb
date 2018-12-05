@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Jekyll::Locale::Handler do
-  let(:config) { { "title" => "Localization Test" } }
-  let(:site)   { make_site(config) }
+  let(:config)    { { "title" => "Localization Test" } }
+  let(:site)      { make_site(config) }
+  let(:locale_id) { "en-US" }
+  let(:metadata)  { {} }
+  let(:locale)    { Jekyll::Locale::Identity.new(locale_id, metadata) }
+
   subject { described_class.new(site) }
 
   before do
@@ -13,39 +17,46 @@ RSpec.describe Jekyll::Locale::Handler do
     expect(subject.inspect).to eql("#<Jekyll::Locale::Handler @site=#{site}>")
   end
 
-  it "returns the default locale" do
-    expect(subject.default_locale).to eql("en-US")
+  it "returns the default 'locale identity' object" do
+    expect(subject.default_locale.class).to eql(locale.class)
+    expect(subject.default_locale.id).to eql(locale.id)
+    expect(subject.default_locale.id).to eql("en-US")
   end
 
-  it "returns the default locale as the current locale" do
-    expect(subject.current_locale).to eql("en-US")
+  it "returns the default 'locale identity' object as the current locale" do
+    expect(subject.current_locale.class).to eql(locale.class)
+    expect(subject.current_locale.id).to eql(locale.id)
+    expect(subject.current_locale.id).to eql("en-US")
   end
 
-  it "returns the available locales" do
+  it "returns an array of available locale ids" do
     expect(subject.available_locales).to eql(["en-US"])
   end
 
-  it "runs in 'manual' mode" do
+  it "runs in 'manual' mode by default" do
     expect(subject.content_dirname).to eql("_locales")
   end
 
   context "in 'auto' mode" do
+    let(:locale_id) { "en" }
+    let(:metadata)  { { "label" => "English" } }
     let(:config) do
       {
         "localization" => {
           "mode"        => "auto",
-          "locale"      => "en",
+          "locale"      => locale_id,
           "locales_set" => %w(fr en),
         },
       }
     end
 
-    it "returns the default locale" do
-      expect(subject.default_locale).to eql("en")
+    it "returns the default 'locale identity' object" do
+      expect(subject.default_locale.class).to eql(locale.class)
+      expect(subject.default_locale.id).to eql("en")
     end
 
-    it "returns the available locales" do
-      expect(subject.available_locales).to eql(%w(fr en))
+    it "returns an array of available locale ids" do
+      expect(subject.available_locales).to eql(%w(en fr))
     end
 
     it "returns an empty content dirname" do
@@ -54,12 +65,14 @@ RSpec.describe Jekyll::Locale::Handler do
   end
 
   context "in 'manual' mode" do
+    let(:locale_id) { "fr" }
+    let(:metadata)  { { "label" => "Français" } }
     let(:config) do
       {
         "localization" => {
           "mode"            => "manual",
-          "locale"          => "fr",
-          "locales_set"     => %w(fr en),
+          "locale"          => locale_id,
+          "locales_set"     => %w(en fr),
           "content_dirname" => "_locales",
         },
       }
@@ -70,12 +83,13 @@ RSpec.describe Jekyll::Locale::Handler do
       FileUtils.rm_rf(content_dir) if File.directory?(content_dir)
     end
 
-    it "returns the default locale" do
-      expect(subject.default_locale).to eql("fr")
+    it "returns the default 'locale identity' object" do
+      expect(subject.default_locale.class).to eql(locale.class)
+      expect(subject.default_locale.id).to eql("fr")
     end
 
-    it "returns the available locales" do
-      expect(subject.available_locales).to eql(%w(en fr))
+    it "returns an array of available locale ids" do
+      expect(subject.available_locales).to eql(%w(fr en))
     end
 
     it "returns the configured content dirname" do
@@ -105,7 +119,7 @@ RSpec.describe Jekyll::Locale::Handler do
       make_page_file(
         "_locales/en/about.md",
         :content      => "Hello World",
-        :front_matter => { "published" => true },
+        :front_matter => { "published" => true }
       )
       site.process
       expect(Pathname.new(dest_dir("en/about.html"))).to exist
@@ -113,10 +127,67 @@ RSpec.describe Jekyll::Locale::Handler do
       make_page_file(
         "_locales/en/about.md",
         :content      => "Hello World",
-        :front_matter => { "published" => false },
+        :front_matter => { "published" => false }
       )
       site.process
       expect(Pathname.new(dest_dir("en/about.html"))).to_not exist
+    end
+  end
+
+  context "with locale metadata hash via locales_set configuration" do
+    let(:config) do
+      {
+        "localization" => {
+          "mode"            => "manual",
+          "locale"          => "fr",
+          "locales_set"     => {
+            "en" => { "label" => "English" },
+            "fr" => { "label" => "Français" },
+          },
+          "content_dirname" => "_locales",
+        },
+      }
+    end
+
+    it "returns the default 'locale identity' object" do
+      expect(subject.default_locale.class).to eql(locale.class)
+      expect(subject.default_locale.id).to eql("fr")
+      expect(subject.default_locale.data).to eql("label" => "Français")
+    end
+
+    it "returns the default 'locale identity' object as the current locale" do
+      expect(subject.current_locale).to eql(subject.default_locale)
+    end
+
+    it "returns an array of available locale ids" do
+      expect(subject.available_locales).to eql(%w(fr en))
+    end
+  end
+
+  context "with invalid locale metadata via locales_set configuration" do
+    let(:config) do
+      {
+        "localization" => {
+          "mode"            => "manual",
+          "locale"          => "fr",
+          "locales_set"     => "fr: Français, en: English",
+          "content_dirname" => "_locales",
+        },
+      }
+    end
+
+    it "returns the default 'locale identity' object" do
+      expect(subject.default_locale.class).to eql(locale.class)
+      expect(subject.default_locale.id).to eql("fr")
+      expect(subject.default_locale.data).to eql({})
+    end
+
+    it "returns the default 'locale identity' object as the current locale" do
+      expect(subject.current_locale).to eql(subject.default_locale)
+    end
+
+    it "returns an array of available locale ids" do
+      expect(subject.available_locales).to eql(%w(fr))
     end
   end
 end

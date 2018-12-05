@@ -2,7 +2,8 @@
 
 module Jekyll
   class Locale::Handler
-    attr_reader :default_locale, :available_locales, :locale_dates, :content_dirname
+    attr_reader :default_locale, :available_locales, :locale_dates, :content_dirname,
+                :user_locales
     attr_writer :current_locale
 
     DEFAULT_CONFIG = {
@@ -22,11 +23,8 @@ module Jekyll
                 else
                   DEFAULT_CONFIG
                 end
-
-      @default_locale    = fetch("locale")
-      @available_locales = user_locales + [@default_locale]
-      @content_dirname   = mode == "auto" ? "" : fetch("content_dir")
-
+      initialize_locales
+      @content_dirname = mode == "auto" ? "" : fetch("content_dir")
       @snakeified_keys = {}
     end
 
@@ -48,14 +46,6 @@ module Jekyll
 
     def read
       mode == "auto" ? auto_localization : manual_localization
-    end
-
-    def user_locales
-      @user_locales ||= begin
-        locales = Array(config["locales_set"]) - [default_locale]
-        locales.compact!
-        locales
-      end
     end
 
     def current_locale
@@ -81,6 +71,35 @@ module Jekyll
       end
 
       nil
+    end
+
+    def initialize_locales
+      default_locale_id  = fetch("locale")
+      default_metadata   = {}
+      @available_locales = [default_locale_id]
+      @user_locales      = []
+
+      locales_set_config = @config["locales_set"]
+      locales_set_config = case locales_set_config
+                           when Array
+                             Hash[locales_set_config.map { |locale| [locale, {}] }]
+                           when Hash
+                             locales_set_config
+                           else
+                             {}
+                           end
+
+      locales_set_config.each do |locale_id, metadata|
+        if locale_id == default_locale_id
+          default_metadata = metadata
+          next
+        end
+
+        @available_locales << locale_id
+        @user_locales << Locale::Identity.new(locale_id, metadata)
+      end
+
+      @default_locale = Locale::Identity.new(default_locale_id, default_metadata)
     end
 
     def process_locale_data(loc, data_hash)
@@ -131,7 +150,7 @@ module Jekyll
     def manual_localization
       user_locales.each do |locale|
         portfolio.each do |canon_doc|
-          loc_page_path = site.in_source_dir(content_dirname, locale, canon_doc.relative_path)
+          loc_page_path = site.in_source_dir(content_dirname, locale.id, canon_doc.relative_path)
           next unless File.exist?(loc_page_path)
           next unless Jekyll::Utils.has_yaml_header?(loc_page_path)
 
