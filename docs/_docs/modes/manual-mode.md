@@ -2,8 +2,16 @@
 permalink: /modes/manual/
 ---
 
-This mode requires the user to provide physical files in the configured `content_dir` with
-sub-directories that match the defined locales.
+The key features of this mode are:
+  * The physical files are handled like any other file in the site, but, they **should partially mirror** their
+    counterpart &mdash; **their relative_paths should match**.
+  * If an original file contains front matter, the physical copy should contain front matter as well.
+  * Physical copies can render different content and into a different layout, if desired.
+  * Physical copies of posts and other writable *documents* can be rendered to a different `slug` by defining the `slug` key in
+    the front matter.
+
+This mode requires the user to provide physical files in the configured `content_dir` with sub-directories that match
+the defined locales.
 
 For example, the following directory structure
 
@@ -39,14 +47,19 @@ _site/tips/optimized-site.html
 _site/tips/url-filters-in-templates.html
 ```
 
-#### Known Limitations
+#### Prerequisites
 
-* The plugin requires that a canonical page and a locale page have the same "relative path" (from the site's `source` and
-  from the `content_dir` respectively).
+* The physical files should reside inside sub-folders that match the desired locale. For example, to "localize" a post at path
+  `movies/_posts/2018-09-24-hello.markdown` with locale `fr`, you should create the physical copy at path
+  `_locales/fr/movies/_posts/2018-09-24-hello.markdown`.
 
-  This means that **`about.md` will expect to link to `_locales/fr/about.md` instead of `_locales/fr/apropos.md`**.
-  To force the locale page to render into a different url, you'll need to either explicitly set a `permalink` key or a
-  `slug` key in the locale page's front matter.
-* **Canonical files are mandatory.**
+* The file path of *an original page* relative to the *site's source*, should match the file path of the corresponding *locale
+  page* relative to the `localization.content_dir` config value.
 
-  This means that `_locales/fr/about.md` will only be **read-in** if `about.md` exists.
+  This means that the locale page which would correspond to *an original page* `about.md` will be **`_locales/fr/about.md`**
+  instead of **`_locales/fr/apropos.md`**. To force the locale page to render into a different url, you'll need to either
+  explicitly set a `permalink` key or a `slug` key in the locale page's front matter.
+
+* **Files must exist in the default language.**
+
+  The file `_locales/fr/about.md` will be **read** if and only if the file `about.md` exists.

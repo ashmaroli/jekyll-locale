@@ -48,11 +48,11 @@ Once configured properly, you will be able to reference them via `{% raw %}{{ pa
 
 ## Setting up hreflangs
 
-Each generated locale page is aware of its canonical page and its sibling locale page (for sites rendering three or more
-locales) and can be used to render meta tags for optimal SEO.
+Each generated locale page is aware of its canonical page and its sibling locale page (for sites rendering three or more locales)
+and can be used to render meta tags for optimal SEO.
 
-Adding the following Liquid construct inside your `<head />` tag will render the markup that tells the crawler how the
-pages are related to each other:
+Adding the following Liquid construct inside your `<head />` tag will render the markup that tells the crawler how the pages are
+related to each other:
 
 ```html
 {% raw %}{% for item in page.hreflangs %}
@@ -60,8 +60,8 @@ pages are related to each other:
 {% endfor %}{% endraw %}
 ```
 
-For example, `about.md` page with `permalink: /about/` in a site setup to render for locales `["en-US", "es", "fr"]`
-with `en-US` as the default locale and hosted at `http://example.com` will render with the following hreflangs:
+For example, `about.md` page with `permalink: /about/` in a site setup to render for locales `["en-US", "es", "fr"]` with `en-US`
+as the default locale and hosted at `http://example.com` will render with the following hreflangs:
 
 ```html
   <link rel="alternate" hreflang="en-US" href="http://example.com/about/" />

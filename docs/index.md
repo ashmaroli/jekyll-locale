@@ -3,8 +3,8 @@
 
 *Jekyll Locale is yet another plugin to handle localization in Jekyll sites.*
 
-The plugin does not literally translate content. However, it provides the means to output site content in multiple
-locales and languages by leveraging the versatility of Jekyll's Data files.
+The plugin does not literally translate content. However, it provides the means to output site content in multiple locales and
+languages by leveraging the versatility of Jekyll's Data files.
 
 
 ## Installation
@@ -17,4 +17,4 @@ locales and languages by leveraging the versatility of Jekyll's Data files.
   end
   ```
 
-- Configure the site with your preferred locales and build your site as usual.
+- [Configure](configuration/) the site with your preferred locales and build your site as usual.

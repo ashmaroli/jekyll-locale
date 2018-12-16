@@ -9,14 +9,25 @@ then this "mode" will generate a total of 1 x 2 x 3 web pages.
 To prevent a certain file from being localized automatically, you may blacklist the file by listing it under the
 `localization.exclude_set` key in your config file.
 
+```yaml
+localization:
+  mode: auto
+  locale: en
+  locales_set: ["en", "fr"]
+  exclude_set:
+    - _posts/2018-10-18-english-only.md
+    - _puppies
+```
+
 ### Gotchas
 
 This mode was originally intended for those sites that offer the same content with multiple localized interfaces. That is, sites
 in which only the "*presentational*" aspects are localized and the content remains the same.
 
 As a result, this mode has the following shortcomings:
-  * The localized page has the same attributes as the canonical page / document &mdash; they have the same `path`, `relative_path`,
-    `data`, `content`, etc. The only attribute they differ in is their `url` and their Liquid representation.
+  * The localized page has the same attributes as the canonical page / document &mdash; they have the same `path`,
+    `relative_path`, `data`, `content`, etc. The only attribute they differ in is their `url` and their Liquid representation.
   * These attributes cannot be modified.
-  * The localized object is a descendant of `Jekyll::Page` even if the canonical object is a Post or any other collection document.
-    This means that the localized object may not respond to certain attributes of the canonical object. (e.g. a document's `id`)
+  * The localized object is a descendant of `Jekyll::Page` even if the canonical object is a Post or any other collection
+    document. This means that the localized object may not respond to certain attributes of the canonical object.
+    (e.g. a document's `date`)

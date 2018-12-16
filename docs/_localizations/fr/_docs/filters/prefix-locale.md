@@ -1,24 +1,32 @@
 ---
-title: Prefix Locale Filter
-permalink: /filters/prefix_locale/
+title: Filtre préfixe locale
+permalink: /filtres/prefix_locale/
+translators:
+  - name: DirtyF
+    link: https://github.com/DirtyF
 ---
 
-This is a basic helper to convert a simple string devoid of whitespaces, into a URI relative to the server root and current
-locale. The generated URI will essentially have `/[locale]` (or just `/` for the default locale) prepended to the given `input`.
+Ce filtre vous permet de convertir une chaîne de caractères sans espace en une URI relative à la racine du site et à la langue
+courante.
 
-The only validations this filter involve are checking if the given `input` is a String or if the input is an absolute URI.
-Additionally, the filter strips away multiple slashes in the input string.
+L'URI générée se verra préfixée avec `/[langue]` (ou `/` pour la langue par défaut).
+
+Le filtre vérifie que la valeur en entrée est bien une chaîne de caractères ou alors une URI absolue.
+
+Le filtre s'occupera également de nettoyer la valeur si elles comporte plusieurs slashs d'affilée.
+
+## Exemples
 
 <div class="mobile-side-scroller">
 <table>
   <caption>
-    <div>Default Locale: <code>en</code></div>
-    <div>Current Locale: <code>en</code></div>
+    <div>Langue par défaut : <code>en</code></div>
+    <div>Langue actuelle : <code>en</code></div>
   </caption>
   <thead>
     <tr>
-      <th>Input</th>
-      <th>Output</th>
+      <th>Entrée</th>
+      <th>Sortie</th>
     </tr>
   </thead>
   <tbody>
@@ -37,13 +45,13 @@ Additionally, the filter strips away multiple slashes in the input string.
 
 <table>
   <caption>
-    <div>Default Locale: <code>en</code></div>
-    <div>Current Locale: <code>fr</code></div>
+    <div>Langue par défaut : <code>en</code></div>
+    <div>Langue courante : <code>fr</code></div>
   </caption>
   <thead>
     <tr>
-      <th>Input</th>
-      <th>Output</th>
+      <th>Entrée</th>
+      <th>Sortie</th>
     </tr>
   </thead>
   <tbody>

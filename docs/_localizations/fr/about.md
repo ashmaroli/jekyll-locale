@@ -1,9 +1,13 @@
 ---
 permalink: /a-propos/
+translators:
+  - name: DirtyF
+    link: https://github.com/DirtyF
 ---
 
-This site was generated using `Jekyll v{{ jekyll.version }}`, the `master` branch of `jekyll-locale` repository, and has been
-deployed at [Netlify](https://netlify.com/).
+Ce site a été généré avec `Jekyll v{{ jekyll.version }}` à partir de la branche `master` du dépôt de `jekyll-locale`, et a été
+déployé sur [Netlify](https://netlify.com/).
 
-Site design is an adaptation of the [Official Jekyll Documentation site](https://jekyllrb.com) and is maintained by the plugin author.
-The background texture was downloaded from: [Subtle Patterns](https://www.toptal.com/designers/subtlepatterns/tactile-noise/).
+Le design du site est adapté du [site officiel de Jekyll](https://jekyllrb.com) et est maintenu par l'auteur du plugin.
+
+La texture de fond a été téléchargée sur [Subtle Patterns](https://www.toptal.com/designers/subtlepatterns/tactile-noise/).

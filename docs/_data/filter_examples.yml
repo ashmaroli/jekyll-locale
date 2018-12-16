@@ -1,5 +1,5 @@
 prefix_locale:
-  en_US:
+  en:
   - input: "{{ 'about' | prefix_locale }}"
     output: "/about"
   - input: "{{ '//about//' | prefix_locale }}"
@@ -9,12 +9,12 @@ prefix_locale:
   - input: "{{ 'https://www.example.com/about/' | prefix_locale }}"
     output: "https://www.example.com/about/"
 
-  fr_FR:
+  fr:
   - input: "{{ 'about' | prefix_locale }}"
-    output: "/fr-FR/about"
+    output: "/fr/about"
   - input: "{{ '//about//' | prefix_locale }}"
-    output: "/fr-FR/about/"
+    output: "/fr/about/"
   - input: "{{ 'about me' | prefix_locale }}"
-    output: "/fr-FR/about me"
+    output: "/fr/about me"
   - input: "{{ 'https://www.example.com/about/' | prefix_locale }}"
     output: "https://www.example.com/about/"

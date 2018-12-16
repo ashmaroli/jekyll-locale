@@ -15,10 +15,11 @@ permalink: /filters/localize_date/
 </blockquote>
 </div>
 
-This plugin provides a `localize_date` filter to aid in localizing valid date strings. It takes an optional parameter to specify the format
-of the output string.
+This plugin provides a `localize_date` filter to aid in localizing valid date strings. It takes an optional parameter to specify
+the format of the output string.
 
-The filter technically delegates to the `I18n` module and therefore requires the translation data to follow a certain convention to pass through without errors.
+The filter technically delegates to the `I18n` module and therefore requires the translation data to follow a certain convention
+to pass through without errors.
 
 ```yaml
 date:
@@ -38,7 +39,10 @@ time:
 #### Requirements
 
 The plugin also places a few conventions to streamline usage:
-* All datetime data should be encompassed under a `locale_date` key for each locale except the default locale, for which, the datetime data has been set by default. But you're free to *redefine* it when necessary.
+* All datetime data should be encompassed under a `locale_date` key for each locale except the default locale, for which, the
+  datetime data has been set by default. But you're free to *redefine* it when necessary.
 * The array of names are filled in by default using values defined in Ruby's `Date` class.
-* The array of full day names and full month names have `nil` as the first entry. So locales for non-English languages should have `nil` as the first entry. (In YAML, null list item can be written as simply `~`)
-* The optional parameter for the filter, `format` should either be a string that corresponds to the symbol of the `formats` subkey (e.g. `":default"`) or a valid `strftime` format.
+* The array of full day names and full month names have `nil` as the first entry. So locales for non-English languages should
+  have `nil` as the first entry. (In YAML, null list item can be written as simply `~`)
+* The optional parameter for the filter, `format` should either be a string that corresponds to the symbol of the `formats`
+  subkey (e.g. `":default"`) or a valid `strftime` format.

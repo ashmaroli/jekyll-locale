@@ -1,18 +1,20 @@
 ---
 translators:
-- name: ashmaroli
-- name: Google Translate
+  - name: ashmaroli
+    link: https://github.com/ashmaroli
+  - name: DirtyF
+    link: https://github.com/DirtyF
 ---
 
-*Jekyll Locale est un autre plugin pour gérer la localisation dans les sites Jekyll.*
+*Jekyll Locale est un plugin de plus qui gère la localisation de sites Jekyll.*
 
-Bien que le plugin ne traduise pas littéralement le contenu, il fournit le moyen de générer le contenu du site dans
-plusieurs paramètres régionaux et langues, en tirant parti de la polyvalence des fichiers de données dans Jekyll.
-
+Le plugin ne s'occupe pas de la traduction de vos contenus, il permet toutefois de générer l'arborescence de votre site dans
+plusieurs langues et paramètres régionaux, en tirant parti de la polyvalence des fichiers de données de Jekyll.
 
 ## Installation
 
-- Ajoutez le plugin au groupe `:jekyll_plugins` dans votre Gemfile et exécutez `bundle install` pour commencer:
+- Ajoutez le plugin au groupe `:jekyll_plugins` dans votre fichier `Gemfile` et lancez la commande `bundle install` pour
+  commencer :
 
   ```ruby
   group :jekyll_plugins do
@@ -20,4 +22,4 @@ plusieurs paramètres régionaux et langues, en tirant parti de la polyvalence d
   end
   ```
 
-- Configurez le site avec vos paramètres régionaux préférés et construisez votre site comme d'habitude.
+- [Configurez](configuration/) le site avec vos préférences régionales et générez votre site comme à l'accoutumée.

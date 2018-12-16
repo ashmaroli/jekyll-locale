@@ -4,26 +4,26 @@ sidebar:
     - title: Configuration
       link: /configuration/
     - title: Mode automatique
-      link: /modes/automatique/
+      link: /modes/auto/
     - title: Mode manuel
       link: /modes/manuel/
 - title: Utilisation
   docs:
     - title: Introduction
-      link: /usage/intro
+      link: /utilisation/intro/
     - title: Utilisation avancée
-      link: /usage/avancée/
-- title: Filtres de Liquid
+      link: /utilisation/avancee/
+- title: Filtres Liquid
   docs:
     - title: localize_date
       link: /filtres/localize_date/
     - title: prefix_locale
       link: /filtres/prefix_locale/
 
-available_locales: Cette page est aussi disponible dans les paramètres régionaux
-copyright_preface: Les contenus de ce site sont
-license_preface: aux termes de la
+available_locales: Cette page est aussi disponible dans les langues suivantes
+copyright_preface: Tous les contenus de ce site
+license_preface: selon les termes de la
 about_page:
   title: À propos
   link:  /a-propos/
-translated_by: "Cette page a été traduit par :"
+translated_by: "Cette page a été traduite par :"

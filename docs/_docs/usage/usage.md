@@ -2,13 +2,13 @@
 permalink: /usage/intro/
 ---
 
-The plugin does not literally translate content. However, it provides the means to output site content in multiple
-locales and languages by leveraging the versatility of Jekyll's Data files.
+The plugin does not literally translate content. However, it provides the means to output site content in multiple locales and
+languages by leveraging the versatility of Jekyll's Data files.
 
 ## Locale Data Files
 
-Data files for defining locales should reside in the directory configured as `localization.data_dir` (*Default:
-`locales`*) which in turn should reside in the site's `data_dir` (*Default: `_data`*).  
+Data files for defining locales should reside in the directory configured as `localization.data_dir` (*Default: `locales`*) which
+in turn should reside in the site's `data_dir` (*Default: `_data`*).  
 In other words, the default locale data directory is at `./_data/locales`.  
 Data files can be of any format supported by Jekyll but should be named according to the configured locales.
 
@@ -17,8 +17,8 @@ Data files can be of any format supported by Jekyll but should be named accordin
 
 ## Templating
 
-A Liquid object `{% raw %}{{ locale }}{% endraw %}` serves as the main interface to this plugin. Technically, this
-object acts as an alias for the following:
+A Liquid object `{% raw %}{{ locale }}{% endraw %}` serves as the main interface to this plugin. Technically, this object acts as
+an alias for the following:
 
 ```html
 {%- raw -%}
@@ -35,5 +35,5 @@ Consequently allowing one to *simplify their Liquid templates*:
 {% endraw %}
 ```
 
-Apart from the `{% raw %}{{ locale }}{% endraw %}` object, the plugin also provides some filters to further ease
-Liquid templating.
+Apart from the `{% raw %}{{ locale }}{% endraw %}` object, the plugin also provides some filters to further ease Liquid
+templating.
