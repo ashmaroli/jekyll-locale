@@ -8,6 +8,7 @@ exclude_patterns:
   - "*.*"
   - ".*"
   - Gemfile
+  - docs/
   - example/
   - spec/
   - lib/jekyll/locale/version.rb
