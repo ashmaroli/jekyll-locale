@@ -20,7 +20,7 @@ strong > code, em > code,
 .note > code {
   max-width: 100%;
   margin: 0 3px;
-  color: #eaeaea;
+  color: #ccc;
   vertical-align: middle;
   background-color: #181818;
   border-radius: 5px;
@@ -59,6 +59,25 @@ pre.highlight { padding: 1em 0.5em }
   margin: 0;
 }
 
+div[class*="language-"] {
+  code {
+    display: block;
+    padding: 0 0.5em;
+
+    &:before {
+      display: block;
+      margin: -1em 0 1em -1em;
+      padding: 8px 1em 5px;
+      width: calc(100% + 2em);
+      content: attr(data-lang);
+      color: #333;
+      font-size: 1em;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: #111;
+    }
+  }
+}
 
 .highlight .hll { background-color: #272822; }
 .highlight .err { color: #960050; background-color: #1e0010 } /* Error */
