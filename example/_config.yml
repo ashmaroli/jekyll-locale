@@ -1,12 +1,17 @@
 title: Localization Example
+baseurl: "/example"
 collections:
   puppies:
     output: true
 localization:
   mode: manual
   locale: en
-  locales_set: ["en", "fr"]
-  exclude_set:
+  locales_set:
+    en:
+      label: English
+    fr:
+      label: Français
+  exclude_set: # For 'auto' mode
     - _posts/2018-10-18-english-only.md
 exclude:
   - Gemfile

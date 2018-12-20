@@ -2,13 +2,13 @@
 {% assign mode = site.localization.mode %}
 {% capture data_table %}
 Locale Mode | : | {{ mode }}
-Page Locale | : | {{ page.locale }}
+Page Locale | : | {{ page.locale.id }}
 {% endcapture %}
 
 {% capture notes %}
 <div>Things to note:</div>
-  {% if page.locale != site.localization.locale %}
-  * The page url **{{ page.url }}** has been *prepended* with **`/{{ page.locale }}`**
+  {% if page.locale.id != site.localization.locale %}
+  * The page url **{{ page.url }}** begins with **`/{{ page.locale.id }}`**
   * The relative filepath to this page is {%- if mode == 'auto' %} the same as the canonical page{% endif %}:
   **{{ page.path }}**
   {% if mode == 'auto' -%}
@@ -27,15 +27,15 @@ Page Locale | : | {{ page.locale }}
 
   <hr/>
 
-  {% if page.hreflangs == empty %}
+  {% if page.locale_siblings == empty %}
   <div>This Page has no other versions
   {%- if mode == 'auto' %} as this page has been explicitly listed under the `exclude_set` {% endif %}.
   </div>
   {% else %}
   <div>This Page is also available under the following locales:
     <ul id="locale-list">
-    {% for ref in page.hreflangs %}
-      <li><a href="{{ ref.url }}">{{ ref.locale }}</a></li>
+    {% for ref in page.locale_siblings %}
+      <li><a href="{{ ref.url | relative_url }}">{{ ref.locale.label }}</a></li>
     {% endfor %}
     </ul>
   </div>
