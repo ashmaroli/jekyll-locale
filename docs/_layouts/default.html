@@ -172,5 +172,53 @@
     };
   </script>
   <!-- Anchor link script -->
+
+  <!-- ClipboardJS scripts -->
+  <script src="{{ 'assets/js/clipboard.min.js' | relative_url }}"></script>
+  <script>
+    var clippyBtn = function (id) {
+      var btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.dataset.clipboardTarget = "#" + id;
+      btn.title = "Copy to Clipboard";
+      return btn;
+    };
+
+    document.onreadystatechange = function () {
+      if (this.readyState === "complete") {
+        var codeBlocks = document.querySelectorAll("div.highlight");
+        for (i = 0; i < codeBlocks.length; i++) {
+          var container = codeBlocks[i],
+              codeBlock = container.querySelector("pre code"),
+              id = "code-block-" + (i + 1);
+          codeBlock.id = id;
+          container.querySelector("pre").appendChild(clippyBtn(id));
+        }
+
+        var clippy = new ClipboardJS('.copy-btn');
+        var btns = document.querySelectorAll('.copy-btn');
+        for (i = 0; i < btns.length; i++) {
+          btns[i].addEventListener('mouseleave', clearTooltip);
+          btns[i].addEventListener('blur', clearTooltip);
+        }
+
+        function clearTooltip(e) {
+          e.currentTarget.setAttribute('class', 'copy-btn');
+          e.currentTarget.removeAttribute('aria-label');
+        }
+
+        function showTooltip(elem, msg) {
+          elem.setAttribute('class', 'copy-btn tooltipped tooltipped-n');
+          elem.setAttribute('data-clippy-status', msg);
+        }
+
+        clippy.on('success', function(e) {
+          e.clearSelection();
+          showTooltip(e.trigger, 'Copied!');
+        });
+      }
+    };
+  </script>
+  <!-- ClipboardJS scripts -->
 </body>
 </html>

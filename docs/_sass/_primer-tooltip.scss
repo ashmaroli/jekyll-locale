@@ -1,0 +1,83 @@
+/*
+  Adapted from GitHub's Primer
+  https://raw.githubusercontent.com/primer/primer/master/modules/primer-tooltips/lib/tooltips.scss
+*/
+
+$tooltip-background-color: #111;
+
+// The tooltip bubble
+.tooltipped::after {
+  position: absolute;
+  z-index: 1000000;
+  display: none;
+  padding: 0.5em 0.75em;
+  color: #ccc;
+  text-align: center;
+  pointer-events: none;
+  -webkit-font-smoothing: subpixel-antialiased;
+  content: attr(data-clippy-status);
+  background: $tooltip-background-color;
+  border-bottom: 1px solid #333;
+  border-radius: 5px;
+  opacity: 0;
+}
+
+// The tooltip arrow
+.tooltipped::before {
+  position: absolute;
+  z-index: 1000001;
+  display: none;
+  width: 0;
+  height: 0;
+  color: $tooltip-background-color;
+  pointer-events: none;
+  content: "";
+  border: 6px solid transparent;
+  opacity: 0;
+}
+
+// delay animation for tooltip
+@keyframes tooltip-appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// This will indicate when we'll activate the tooltip
+.tooltipped:hover,
+.tooltipped:active,
+.tooltipped:focus {
+  &::before,
+  &::after {
+    display: inline-block;
+    text-decoration: none;
+    animation-name: tooltip-appear;
+    animation-duration: 0.1s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in;
+    animation-delay: 0s;
+  }
+}
+
+// Tooltips above the object
+.tooltipped-n {
+  &::after {
+    right: 50%;
+    bottom: 100%;
+    margin-bottom: 6px;
+  }
+
+  &::before {
+    top: -7px;
+    right: 50%;
+    bottom: auto;
+    margin-right: -6px;
+    border-top-color: $tooltip-background-color;
+  }
+}
+
+.tooltipped-n::after { transform: translateX(20%) }

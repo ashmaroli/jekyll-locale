@@ -49,19 +49,39 @@ h3 > code { font-size: inherit }
   margin: 1em 0;
   width: 100%;
   overflow: auto;
+  &:hover .copy-btn { opacity: 1 }
+
   pre, code { line-height: 1.45em }
 }
 
-pre.highlight { padding: 1em 0.5em }
+pre.highlight { position: relative; padding: 1em 0.5em }
 
 .highlighter-rouge .highlight {
   @extend .highlight;
   margin: 0;
 }
 
+.copy-btn {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  padding: 0.9em;
+  right: 1em;
+  bottom: 1em;
+  background: url('../img/clippy.svg') no-repeat 60% 50% #333;
+  background-size: 1em;
+  border: 1px solid #454545;
+  border-radius: 3px;
+  opacity: 0;
+  cursor: pointer;
+
+  &:focus { outline: none }
+}
+
 div[class*="language-"] {
   code {
     display: block;
+    position: relative;
     padding: 0 0.5em;
 
     &:before {
